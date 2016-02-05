@@ -2,11 +2,10 @@
 
 #include "exceptions.hpp"
 #include "list.hpp"
-#include "optional.hpp"
+#include "maybe.hpp"
 #include "util.hpp"
 #include "value.hpp"
 
-#include <experimental/optional>
 #include <memory>
 
 namespace imu {
@@ -39,37 +38,31 @@ namespace imu {
   }
 
   template<typename T, typename S>
-  inline optional<std::reference_wrapper<const T>>
-  first(const std::shared_ptr<S>& s) {
+  inline maybe<T> first(const std::shared_ptr<S>& s) {
     return !is_empty(s) ?
-      make_optional(std::cref(s->template first<T>()))
+      maybe<T>(s->template first<T>())
       :
-      optional<std::reference_wrapper<const T>>();
+      maybe<T>();
   }
 
   template<typename S>
-  inline optional<
-    std::reference_wrapper<
-      const typename S::value_type>
-    >
+  inline maybe<typename S::value_type>
   first(const std::shared_ptr<S>& s) {
     return !is_empty(s) ?
-      make_optional(std::cref(s->first()))
+      maybe<typename S::value_type>(s->first())
       :
-      optional<
-        std::reference_wrapper<
-          const typename S::value_type>
-        >();
+      maybe<typename S::value_type>();
   }
 
   template<typename T, typename S>
-  inline optional<const value> ffirst(const std::shared_ptr<S>& s) {
+  inline auto ffirst(const std::shared_ptr<S>& s)
+    -> decltype(first<T, S>(first<T, S>(s))) {
     return first<T, S>(first<T, S>(s));
   }
 
   template<typename S>
-  inline optional<const typename S::value_type>
-  ffirst(const std::shared_ptr<S>& s) {
+  inline auto ffirst(const std::shared_ptr<S>& s)
+    -> decltype(first<S>(first<S>(s))) {
     return first<S>(first<S>(s));
   }
 
@@ -118,9 +111,7 @@ namespace imu {
   }
 
   template<typename T, typename S>
-  inline auto second(const std::shared_ptr<S>& s)
-    -> decltype(first<T, S>(rest(s))) {
-
+  inline maybe<T> second(const std::shared_ptr<S>& s) {
     return first<T, S>(rest(s));
   }
 
@@ -217,7 +208,7 @@ namespace imu {
   inline ty::list::p take(uint64_t n, const std::shared_ptr<T>& x) {
     auto s = seq(x);
     if (n > 0 && !is_empty(s)) {
-        return conj(take(n-1, rest(s), *first(s)));
+        return conj(take(n-1, rest(s), first(s)));
     }
     return nil<ty::list>();
   }
@@ -230,8 +221,8 @@ namespace imu {
     typedef typename signature_t::template arg<0>::decayed arg_t;
 
     auto f = first<arg_t>(s);
-    if (pred(*f)) {
-      return conj(take_while(pred, rest(s), *f));
+    if (f && pred(f)) {
+      return conj(take_while(pred, rest(s), f));
     }
 
     return nil<S>();
@@ -259,7 +250,7 @@ namespace imu {
 
     auto head = seq(s);
 
-    while (!is_empty(head) && pred(*first<arg_t>(head))) {
+    while (!is_empty(head) && pred(first<arg_t>(head))) {
       head = rest(head);
     }
 
@@ -283,7 +274,7 @@ namespace imu {
   }
 
   template<typename T, typename F, typename S>
-  inline optional<std::reference_wrapper<const T>>
+  inline maybe<T>
   some(const F& pred, const std::shared_ptr<S>& s) {
 
     typedef type_traits::lambda_traits<F> signature_t;
@@ -303,7 +294,7 @@ namespace imu {
       return first<T>(head);
     }
 
-    return optional<std::reference_wrapper<const T>>();
+    return maybe<T>();
   }
 
   template<typename F, typename S>
