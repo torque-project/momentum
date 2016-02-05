@@ -1,5 +1,7 @@
 #pragma once
 
+#include "optional.hpp"
+
 namespace imu {
 
   namespace seqs {

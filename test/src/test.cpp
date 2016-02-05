@@ -115,6 +115,21 @@ void test_vector_4() {
   assert(is_seq(seq(vector(1, 2, 3))));
 }
 
+void test_vector_5() {
+
+  auto v = vector({1, 2, 3});
+
+  assert(count(v) == 3);
+
+  auto s = seq(v);
+
+  assert(first<int>(s) == 1);
+  assert(second<int>(s) == 2);
+  assert(first<int>(nthrest(2, s)) == 3);
+  assert(last<int>(s) == 3);
+  assert(is_empty(nthrest(3, s)));
+}
+
 void test_iterated_0() {
 
   int foo[3] = {1, 2, 3};
@@ -193,6 +208,23 @@ void test_filter_0() {
   assert(is_every([](int x) { return (x & 1) == 0; }, s));
 }
 
+void test_some_0() {
+
+  auto s = list(1, 2, 3, 4, 5);
+
+  auto n = some<int>([](int x){
+      return x > 3;
+    }, s);
+
+  assert(n && n == 4);
+
+  auto m = some([](int x){
+      return x > 5;
+    }, s);
+
+  assert(!m);
+}
+
 void test_into_0() {
 
   auto v   = vector();
@@ -215,6 +247,7 @@ int main() {
   test_vector_2();
   test_vector_3();
   test_vector_4();
+  test_vector_5();
 
   std::cout << "All vector tests passed" << std::endl;
 
@@ -227,6 +260,7 @@ int main() {
   test_reduce_2();
   test_map_0();
   test_filter_0();
+  test_some_0();
   test_into_0();
 
   std::cout << "All core tests passed" << std::endl;

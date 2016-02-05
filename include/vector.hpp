@@ -137,6 +137,10 @@ namespace imu {
 
       template<typename T>
       inline basic_vector(const p& v, const T& val)
+        : basic_vector(v, value(val))
+      {}
+
+      inline basic_vector(const p& v, const value& val)
         : _cnt(v->_cnt + 1)
         , _shift(v->_shift)
         , _tail(v->_tail)
@@ -144,10 +148,10 @@ namespace imu {
         if ((v->_cnt - v->tail_off()) < 32) {
           _shift = v->_shift;
           _root  = v->_root;
-          _tail->_arr.push_back(value(val));
+          _tail->_arr.push_back(val);
         }
         else {
-          extend_root(v, value(val));
+          extend_root(v, val);
         }
       }
 
@@ -159,9 +163,21 @@ namespace imu {
         return _cnt;
       }
 
+      inline const value_type& nth(uint64_t n) const {
+        return (*leaf_for(n))[n & 0x01f];
+      }
+
       template<typename T>
       inline const T& nth(uint64_t n) const {
-        return (*leaf_for(n))[n & 0x01f].template get<T>();
+        return nth(n).template get<T>();
+      }
+
+      inline const value_type& operator[](uint64_t n) const {
+        return nth(n);
+      }
+
+      inline const value_type& operator()(uint64_t n) const {
+        return nth(n);
       }
 
       template<typename S>
@@ -278,6 +294,14 @@ namespace imu {
   template<typename Arg, typename... Args>
   inline ty::vector::p vector(const Arg& x, Args... args) {
     return vector(vector(), x, args...);
+  }
+
+  inline ty::vector::p vector(std::initializer_list<value> l) {
+    auto out = nu<ty::vector>();
+    for (auto& val : l) {
+      out = nu<ty::vector>(out, val);
+    }
+    return out;
   }
 
   inline ty::chunked_seq::p seq(const ty::vector::p& v) {

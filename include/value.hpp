@@ -8,6 +8,11 @@
 
 namespace imu {
 
+  /**
+   * A type that can hold any other value. This could be replaced with
+   * std::any, once it's not experimental anymore.
+   *
+   */
   struct value {
 
     inline value()
@@ -22,6 +27,14 @@ namespace imu {
       : pad(cpy.pad ? cpy.pad->clone() : nullptr)
     {}
 
+    inline bool is_set() const {
+      return (bool) pad;
+    }
+
+    inline operator bool() const {
+      return is_set();
+    }
+
     template<typename T>
     inline const T& get() const {
 
@@ -35,8 +48,8 @@ namespace imu {
       return dynamic_cast<pad_type*>(pad.get())->value;
     }
 
-    inline bool operator== (const value& other) const {
-      return pad->equiv(other.pad);
+    inline friend bool operator== (const value& l, const value& r) {
+      return l.pad->equiv(r.pad);
     }
 
     inline const std::type_info& type() const {
