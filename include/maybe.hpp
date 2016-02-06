@@ -1,6 +1,5 @@
 #pragma once
 
-#include <experimental/optional>
 #include <type_traits>
 
 template<typename T>
@@ -40,18 +39,50 @@ struct maybe {
     return *ref;
   }
 
-  inline friend bool operator== (const maybe& l, const maybe& r) {
-    return *l.ref == *r.ref;
-  }
-
-  inline friend bool operator== (const maybe& l, const type& r) {
-    return *l.ref == r;
-  }
-
-  inline friend bool operator== (const type& l, const maybe& r) {
-    return *r.ref == l;
-  }
-
-
   const type* ref;
 };
+
+template<typename T>
+inline bool operator== (const maybe<T>& l, const maybe<T>& r) {
+  return *l.ref == *r.ref;
+}
+
+template<typename T>
+inline bool operator== (const maybe<T>& l, const typename maybe<T>::type& r) {
+  return *l.ref == r;
+}
+
+template<typename T>
+inline bool operator== (const typename maybe<T>::type& l, const maybe<T>& r) {
+  return *r.ref == l;
+}
+
+template<typename T>
+inline bool operator<= (const maybe<T>& l, const maybe<T>& r) {
+  return *l.ref <= *r.ref;
+}
+
+template<typename T>
+inline bool operator<= (const maybe<T>& l, const typename maybe<T>::type& r) {
+  return *l.ref <= r;
+}
+
+template<typename T>
+inline bool operator<= (const typename maybe<T>::type& l, const maybe<T>& r) {
+  return *r.ref <= l;
+}
+
+template<typename T>
+inline bool operator>= (const maybe<T>& l, const maybe<T>& r) {
+  return *l.ref <= *r.ref;
+}
+
+template<typename T>
+inline bool operator>= (const maybe<T>& l, const typename maybe<T>::type& r) {
+  return *l.ref <= r;
+}
+
+template<typename T>
+inline bool operator>= (const typename maybe<T>::type& l, const maybe<T>& r) {
+  return *r.ref <= l;
+}
