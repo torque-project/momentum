@@ -15,6 +15,8 @@ namespace imu {
    */
   struct value {
 
+    typedef std::shared_ptr<value> p;
+
     inline value()
       : pad(nullptr)
     {}
@@ -119,6 +121,11 @@ namespace imu {
   template<typename T>
   inline const T& value_cast(const value& v) {
     return v.get<T>();
+  }
+
+  template<typename T>
+  inline const T& value_cast(const value::p& v) {
+    return v->get<T>();
   }
 
   template<>

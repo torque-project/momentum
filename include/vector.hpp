@@ -93,7 +93,7 @@ namespace imu {
       typedef std::shared_ptr<basic_leaf> p;
       typedef base_node<mixin> base;
 
-      std::vector<value> _arr;
+      std::vector<value::p> _arr;
 
       inline basic_leaf()
       {}
@@ -102,10 +102,10 @@ namespace imu {
         : _arr(a->_arr)
       {}
 
-      inline basic_leaf(const value& val)
+      inline basic_leaf(const value::p& val)
       { _arr.push_back(val); }
 
-      inline const value& operator[](uint64_t n) const {
+      inline const value::p& operator[](uint64_t n) const {
         return _arr[n];
       }
     };
@@ -142,10 +142,10 @@ namespace imu {
 
       template<typename T>
       inline basic_vector(const p& v, const T& val)
-        : basic_vector(v, value(val))
+        : basic_vector(v, nu<value>(val))
       {}
 
-      inline basic_vector(const p& v, const value& val)
+      inline basic_vector(const p& v, const value::p& val)
         : _cnt(v->_cnt + 1)
         , _shift(v->_shift)
         , _tail(v->_tail)
@@ -169,7 +169,7 @@ namespace imu {
       }
 
       inline const value_type& nth(uint64_t n) const {
-        return (*leaf_for(n))[n & 0x01f];
+        return *(*leaf_for(n))[n & 0x01f];
       }
 
       template<typename T>
@@ -211,7 +211,7 @@ namespace imu {
         throw out_of_bounds(n, _cnt);
       }
 
-      inline void extend_root(const basic_vector::p& v, const value& val) {
+      inline void extend_root(const basic_vector::p& v, const value::p& val) {
 
         auto new_leaf = nu<leaf>(v->_tail);
         _tail = nu<leaf>(val);
@@ -261,7 +261,7 @@ namespace imu {
       }
 
       inline const value_type& first() const {
-        return (*_leaf)[_off];
+        return *(*_leaf)[_off];
       };
 
       inline p rest() const {
@@ -313,7 +313,7 @@ namespace imu {
   inline ty::vector::p vector(std::initializer_list<value> l) {
     auto out = nu<ty::vector>();
     for (auto& val : l) {
-      out = nu<ty::vector>(out, val);
+      out = nu<ty::vector>(out, nu<value>(val));
     }
     return out;
   }
