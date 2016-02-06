@@ -57,13 +57,15 @@ namespace imu {
       }
 
       static inline p push_tail(
-          uint64_t idx
+          uint64_t cnt
         , uint64_t level
         , const p& parent
         , const base& tail) {
 
         p out(nu<basic_node>(*parent));
         base insert;
+
+        uint64_t idx = ((cnt - 1) >> level) & 0x01f;
 
         if (level == 5) {
           insert = tail;
@@ -72,7 +74,7 @@ namespace imu {
           auto child = parent->_arr[idx];
           if (child) {
             auto as_base = std::dynamic_pointer_cast<basic_node>(child);
-            insert = push_tail(idx, level - 5, as_base, tail);
+            insert = push_tail(cnt, level - 5, as_base, tail);
           }
           else {
             insert = new_path(level - 5, tail);
@@ -99,6 +101,9 @@ namespace imu {
       inline basic_leaf(const basic_leaf::p& a)
         : _arr(a->_arr)
       {}
+
+      inline basic_leaf(const value& val)
+      { _arr.push_back(val); }
 
       inline const value& operator[](uint64_t n) const {
         return _arr[n];
@@ -169,7 +174,7 @@ namespace imu {
 
       template<typename T>
       inline const T& nth(uint64_t n) const {
-        return nth(n).template get<T>();
+        return value_cast<T>(nth(n));
       }
 
       inline const value_type& operator[](uint64_t n) const {
@@ -182,7 +187,7 @@ namespace imu {
 
       template<typename S>
       inline friend bool operator== (
-        const p& self, const std::shared_ptr<S> x) {
+        const p& self, const std::shared_ptr<S>& x) {
 
         return seqs::equiv(seq(self), x);
       }
@@ -209,6 +214,7 @@ namespace imu {
       inline void extend_root(const basic_vector::p& v, const value& val) {
 
         auto new_leaf = nu<leaf>(v->_tail);
+        _tail = nu<leaf>(val);
 
         bool overflow = ((v->_cnt >> 5) > (1 << v->_shift));
         if (overflow) {
@@ -216,8 +222,7 @@ namespace imu {
           _root  = nu<node>(v->_root, node::new_path(v->_shift, new_leaf));
         }
         else {
-          uint64_t idx = ((v->_cnt - 1) >> _shift) & 0x01f;
-          _root = node::push_tail(idx, _shift, v->_root, new_leaf);
+          _root = node::push_tail(v->_cnt, _shift, v->_root, new_leaf);
         }
       }
     };
@@ -294,6 +299,15 @@ namespace imu {
   template<typename Arg, typename... Args>
   inline ty::vector::p vector(const Arg& x, Args... args) {
     return vector(vector(), x, args...);
+  }
+
+  template<typename T>
+  inline ty::vector::p vector(std::initializer_list<T> l) {
+    auto out = nu<ty::vector>();
+    for (auto& val : l) {
+      out = nu<ty::vector>(out, val);
+    }
+    return out;
   }
 
   inline ty::vector::p vector(std::initializer_list<value> l) {

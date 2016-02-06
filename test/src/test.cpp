@@ -130,6 +130,21 @@ void test_vector_5() {
   assert(is_empty(nthrest(3, s)));
 }
 
+void test_vector_6() {
+
+  auto v = vector();
+
+  for (int i=0; i<128; ++i) {
+    v = conj(v, i);
+  }
+
+  assert(count(v) == 128);
+
+  for (int i=0; i<128; ++i) {
+    assert(v->nth<int>(i) == i);
+  }
+}
+
 void test_iterated_0() {
 
   int foo[3] = {1, 2, 3};
@@ -248,6 +263,7 @@ int main() {
   test_vector_3();
   test_vector_4();
   test_vector_5();
+  test_vector_6();
 
   std::cout << "All vector tests passed" << std::endl;
 
