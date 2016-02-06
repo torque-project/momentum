@@ -10,8 +10,6 @@
 
 namespace imu {
 
-  using namespace std::experimental;
-
   template<typename T>
   inline const std::shared_ptr<T>& nil() {
     static const std::shared_ptr<T> value;
