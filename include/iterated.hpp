@@ -57,14 +57,7 @@ namespace imu {
   }
 
   template<typename T>
-  inline auto iterated(const T& coll)
-  // this detects the type of the iterator of coll, without the use of
-  // the 'iterator' type on stl containers, which allows automatic
-  // detection of iterator types on fixed size arrays
-    -> decltype(
-         std::make_shared<
-           ty::iterated_seq<decltype(std::begin(coll))>
-         >()) {
+  inline decltype(auto) iterated(const T& coll) {
 
     auto b = std::begin(coll);
     auto e = std::end(coll);

@@ -53,14 +53,12 @@ namespace imu {
   }
 
   template<typename T, typename S>
-  inline auto ffirst(const std::shared_ptr<S>& s)
-    -> decltype(first<T, S>(first<T, S>(s))) {
+  inline decltype(auto) ffirst(const std::shared_ptr<S>& s) {
     return first<T, S>(first<T, S>(s));
   }
 
   template<typename S>
-  inline auto ffirst(const std::shared_ptr<S>& s)
-    -> decltype(first<S>(first<S>(s))) {
+  inline decltype(auto) ffirst(const std::shared_ptr<S>& s) {
     return first<S>(first<S>(s));
   }
 
@@ -296,9 +294,7 @@ namespace imu {
   }
 
   template<typename F, typename S>
-  inline auto some(const F& pred, const std::shared_ptr<S>& s)
-    -> decltype(some<value, F, S>(pred, s)) {
-
+  inline decltype(auto) some(const F& pred, const std::shared_ptr<S>& s) {
     return some<value>(pred, s);
   }
 }
