@@ -78,6 +78,12 @@ namespace imu {
     return nu<ty::list>(val, list(vals...));
   }
 
+  /**
+   * @namespace fxd
+   * @brief Functions in this namespace create containers
+   * with a fixed type
+   *
+   */
   namespace fxd {
 
     template<typename T>
