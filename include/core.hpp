@@ -269,13 +269,12 @@ namespace imu {
    *          implicitly convertible. The second parameter can be any
    *          type as long as every value in the sequence is convertible
    *          to this type.
-   * @param x An initial value.
-   * @param s Any value on which seq can be called.
+   * @param init An initial value.
+   * @param x Any value on which seq can be called.
    * @return Returns the result of the reduction or x if s is empty.
    */
   template<typename F, typename T, typename S>
-  inline T reduce(
-    const F& f, const T& x, const std::shared_ptr<S>& s) {
+  inline T reduce(const F& f, const T& init, const std::shared_ptr<S>& x) {
 
     typedef type_traits::lambda_traits<F> signature_t;
     typedef typename signature_t::template arg<1>::decayed arg_t;
@@ -299,12 +298,12 @@ namespace imu {
    * @param f A function of one arguments The parameter can be any
    *          type as long as every value in the sequence is convertible
    *          to this type.
-   * @param s Any value on which seq can be called.
+   * @param x Any value on which seq can be called.
    * @return Returns the result of the apply f to every value in the sequence.
    */
   template<typename F, typename S>
   inline ty::list::p map(
-    const F& f, const std::shared_ptr<S>& s) {
+    const F& f, const std::shared_ptr<S>& x) {
 
     typedef type_traits::lambda_traits<F> signature_t;
     typedef typename signature_t::template arg<0>::decayed arg_t;
@@ -324,12 +323,12 @@ namespace imu {
    * @param pred A predicate function. The parameter can be any
    *             type as long as every value in the sequence is
    *             convertible to this type.
-   * @param s Any value on which seq can be called.
+   * @param x Any value on which seq can be called.
    * @return Returns the filtered sequence.
    */
   template<typename F, typename S>
   inline ty::list::p filter(
-    const F& pred, const std::shared_ptr<S>& s) {
+    const F& pred, const std::shared_ptr<S>& x) {
 
     typedef type_traits::lambda_traits<F> signature_t;
     typedef typename signature_t::template arg<0>::decayed arg_t;
