@@ -392,8 +392,7 @@ namespace imu {
    * @return Returns the newly formed sequence.
    */
   template<typename F, typename S>
-  inline std::shared_ptr<S> take_while(
-    const F& pred, const std::shared_ptr<S>& s) {
+  inline ty::list::p take_while(const F& pred, const std::shared_ptr<S>& s) {
 
     typedef type_traits::lambda_traits<F> signature_t;
     typedef typename signature_t::template arg<0>::decayed arg_t;
@@ -403,7 +402,7 @@ namespace imu {
       return conj(take_while(pred, rest(s), f));
     }
 
-    return nil<S>();
+    return list();
   }
 
   /**
@@ -415,7 +414,7 @@ namespace imu {
    * @return Returns the newly formed sequence.
    */
   template<typename S>
-  inline std::shared_ptr<S> drop(uint64_t n, const std::shared_ptr<S>& x) {
+  inline decltype(auto) drop(uint64_t n, const std::shared_ptr<S>& x) {
 
     auto head = seq(s);
     auto m    = n;
@@ -438,8 +437,7 @@ namespace imu {
    * @return Returns the newly formed sequence.
    */
   template<typename F, typename S>
-  inline std::shared_ptr<S> drop_while(
-    const F& pred, const std::shared_ptr<S>& s) {
+  inline decltype(auto) drop_while(const F& pred, const std::shared_ptr<S>& s) {
 
     typedef type_traits::lambda_traits<F> signature_t;
     typedef typename signature_t::template arg<0>::decayed arg_t;
