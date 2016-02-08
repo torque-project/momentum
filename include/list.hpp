@@ -92,6 +92,15 @@ namespace imu {
     }
   }
 
+  template<typename T>
+  inline ty::list::p list(std::initializer_list<T> l) {
+    auto out = nu<ty::list>();
+    for (auto& val : l) {
+      out = nu<ty::list>(val, out);
+    }
+    return out;
+  }
+
   // @cond HIDE
   template<typename T, typename X>
   inline typename ty::basic_list<T>::p

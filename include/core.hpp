@@ -253,12 +253,12 @@ namespace imu {
     -> decltype(s->template nth<T>(idx)) {
     return s->template nth<T>(idx);
   }
-
+  /*
   template<typename T, typename S>
   inline const T& nth(std::shared_ptr<S>& s, uint64_t idx) {
     first<T, S>(nthrest(idx, s));
   }
-
+  */
   /**
    * @brief Reduces a sequence of values to a single value.
    * The values get reduced by iteratively computing
@@ -279,11 +279,11 @@ namespace imu {
     typedef type_traits::lambda_traits<F> signature_t;
     typedef typename signature_t::template arg<1>::decayed arg_t;
 
-    auto head = seq(s);
-    auto out  = x;
+    auto head = seq(x);
+    auto out  = init;
 
-    while (auto x = first<arg_t>(head)) {
-      out  = f(out, *x);
+    while (auto step = first<arg_t>(head)) {
+      out  = f(out, *step);
       head = rest(head);
     }
 
@@ -312,7 +312,7 @@ namespace imu {
         return conj(s, f(x));
       },
       list(),
-      seq(s));
+      seq(x));
   }
 
   /**
@@ -337,7 +337,7 @@ namespace imu {
         return pred(x) ? conj(s, x) : s;
       },
       list(),
-      seq(s));
+      seq(x));
   }
 
   /**
@@ -415,7 +415,7 @@ namespace imu {
   template<typename S>
   inline decltype(auto) drop(uint64_t n, const std::shared_ptr<S>& x) {
 
-    auto head = seq(s);
+    auto head = seq(x);
     auto m    = n;
 
     while (!is_empty(head) && m-- > 0) {
@@ -465,7 +465,7 @@ namespace imu {
     typedef type_traits::lambda_traits<F> signature_t;
     typedef typename signature_t::template arg<0>::decayed arg_t;
 
-    auto head = seq(s);
+    auto head = seq(x);
 
     while (!is_empty(head) && pred(*first<arg_t>(head))) {
       head = rest(head);
@@ -523,12 +523,12 @@ namespace imu {
    *
    */
   template<typename S>
-  inline uint64_t count(const std::shared_ptr<S>& s)
+  inline auto count(const std::shared_ptr<S>& s)
     -> decltype(s->count(), uint64_t()) {
 
     return s ? s->count() : 0;
   }
-
+  /*
   template<typename S>
   inline uint64_t count(const std::shared_ptr<S>& s) {
     return reduce(
@@ -536,4 +536,5 @@ namespace imu {
         return s + 1;
       }, 0, s);
   }
+  */
 }
