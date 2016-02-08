@@ -115,6 +115,10 @@ namespace imu {
       maybe<typename S::value_type>();
   }
 
+  /**
+   * @brief Same as first(rest(s))
+   *
+   */
   template<typename T, typename S>
   inline decltype(auto) ffirst(const std::shared_ptr<S>& s) {
     return first<T, S>(first<T, S>(s));
