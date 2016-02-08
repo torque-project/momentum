@@ -318,6 +318,7 @@ namespace imu {
     return out;
   }
 
+  // @cond HIDE
   inline ty::chunked_seq::p seq(const ty::vector::p& v) {
     if (!v || v->is_empty()) {
       return ty::chunked_seq::p();
@@ -329,4 +330,5 @@ namespace imu {
   inline ty::vector::p conj(const ty::vector::p& v, const T& x) {
     return nu<ty::vector>(v, x);
   }
+  // @endcond
 }

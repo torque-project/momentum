@@ -92,9 +92,11 @@ namespace imu {
     }
   }
 
+  // @cond HIDE
   template<typename T, typename X>
   inline typename ty::basic_list<T>::p
   conj(const std::shared_ptr<ty::basic_list<T>>& l, const X& v) {
     return nu<ty::basic_list<T>>(v, l);
   }
+  // @endcond
 }
