@@ -129,6 +129,7 @@ namespace imu {
     return first<S>(first<S>(s));
   }
 
+  // @cond HIDE
   namespace sfinae {
 
     template<typename S>
@@ -152,6 +153,7 @@ namespace imu {
       return rest_impl_seq(seq(s));
     }
   }
+  // @endcond
 
   /**
    * Returns its input sequence without the first element. If the sequence

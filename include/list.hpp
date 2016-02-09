@@ -80,8 +80,8 @@ namespace imu {
 
   /**
    * @namespace fxd
-   * @brief Functions in this namespace create containers
-   * with a fixed type
+   * @brief Functions in this namespace create sequences
+   * with a fixed type.
    *
    */
   namespace fxd {
