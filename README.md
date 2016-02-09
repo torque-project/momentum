@@ -8,7 +8,7 @@ A C++ port of the Clojure data structures and core functions
 This library provides a replacement for most of the data structures found in 
 the C++ standard library and a set of functions to work on them. 
 While the data structures are not intended as a drop in replacement 
-(since they mimic the CLojure API), the library contains a compatability layer, 
+(since they mimic the Clojure API), the library contains a compatability layer, 
 so that STL data structures can be used with Momentum's algorithms and vice versa.
 
 The core intention of the library is to bring a set of immutable data structures
