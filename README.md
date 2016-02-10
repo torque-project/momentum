@@ -36,6 +36,11 @@ an API documentation.
 * [Momentum Wiki](https://github.com/jkrueger/momentum/wiki)
 * [API Docs](http://jkrueger.github.io/momentum)
 
+Otherwise the CLojure documentation is a good resource, since the API tries
+to be as close to Clojure as possible.
+
+* [Clojure Documentation](http://clojure.github.io/clojure/)
+
 
 # Contributing
 
@@ -51,3 +56,4 @@ The following items are currently under development and will be added soon.
 
 * Transient data structures.
 * Sets
+* Lazy Sequences
