@@ -94,7 +94,7 @@ namespace imu {
     template<typename Val, typename... Vals>
     inline typename ty::basic_list<Val>::p
     list(const Val& val, Vals... vals) {
-      return nu<ty::basic_list<Val>>(val, list(vals...));
+      return nu<ty::basic_list<Val>>(val, list<Val>(vals...));
     }
   }
 

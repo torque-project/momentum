@@ -2,6 +2,7 @@
 #include "list.hpp"
 #include "iterated.hpp"
 #include "vector.hpp"
+#include "array_map.hpp"
 
 #include <cassert>
 #include <iostream>
@@ -145,6 +146,58 @@ void test_vector_6() {
   }
 }
 
+void test_array_map_0() {
+
+  std::string foo("foo");
+  std::string bar("bar");
+
+  auto m = array_map(foo, 1, bar, 2);
+
+  assert(count(m) == 2);
+  assert(get<int>(m, foo) == 1);
+  assert(get<int>(m, bar) == 2);
+}
+
+void test_array_map_1() {
+
+  auto m = array_map(std::string("foo"), 1, std::string("bar"), 2);
+  auto s = seq(m);
+
+  assert(is_seq(s));
+
+  assert(first<std::string>(*first(s)) == "foo");
+  assert(second<int>(*first(s)) == 1);
+
+  assert(first<std::string>(*second(s)) == "bar");
+  assert(second<int>(*second(s)) == 2);
+}
+
+void test_array_map_2() {
+
+  std::string foo("foo");
+  std::string bar("bar");
+
+  auto m = array_map();
+  m = assoc(m, foo, 1);
+  m = assoc(m, bar, 2);
+
+  assert(count(m) == 2);
+  assert(get<int>(m, foo) == 1);
+  assert(get<int>(m, bar) == 2);
+}
+
+void test_array_map_3() {
+
+  std::string foo("foo");
+  std::string bar("bar");
+
+  auto m = array_map(foo, 1, bar, 2);
+  m = dissoc(m, bar);
+
+  assert(count(m) == 1);
+  assert(get<int>(m, foo) == 1);
+}
+
 void test_iterated_0() {
 
   int foo[3] = {1, 2, 3};
@@ -248,6 +301,52 @@ void test_into_0() {
   assert(into(v, lst) == lst);
 }
 
+void test_into_1() {
+
+  typedef std::pair<int, int> pair;
+
+  auto lst =
+    fxd::list(
+      std::make_pair(1, 1),
+      std::make_pair(3, 2),
+      std::make_pair(5, 3));
+
+  auto m = into(array_map(), lst);
+
+  assert(count(m) == 3);
+
+  assert(get<int>(m, 1) == 1);
+  assert(get<int>(m, 3) == 2);
+  assert(get<int>(m, 5) == 3);
+}
+
+void test_into_2() {
+
+  typedef std::pair<value, value> pair;
+
+  auto lst = list(pair(1, 1), pair(3, 2), pair(5, 3));
+  auto m   = into(array_map(), lst);
+
+  assert(count(m) == 3);
+
+  assert(get<int>(m, 1) == 1);
+  assert(get<int>(m, 3) == 2);
+  assert(get<int>(m, 5) == 3);
+}
+
+void test_into_3() {
+
+  auto m0 = array_map(1, 1, 3, 2, 5, 3);
+  auto m1 = into(array_map(), seq(m0));
+
+  assert(count(m1) == 3);
+
+  assert(get<int>(m1, 1) == 1);
+  assert(get<int>(m1, 3) == 2);
+  assert(get<int>(m1, 5) == 3);
+}
+
+
 int main() {
 
   test_list_0();
@@ -267,6 +366,13 @@ int main() {
 
   std::cout << "All vector tests passed" << std::endl;
 
+  test_array_map_0();
+  test_array_map_1();
+  test_array_map_2();
+  test_array_map_3();
+
+  std::cout << "All array_map tests passed" << std::endl;
+
   test_iterated_0();
 
   std::cout << "All iterated seq tests passed" << std::endl;
@@ -278,6 +384,9 @@ int main() {
   test_filter_0();
   test_some_0();
   test_into_0();
+  test_into_1();
+  test_into_2();
+  test_into_3();
 
   std::cout << "All core tests passed" << std::endl;
 

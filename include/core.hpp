@@ -115,6 +115,31 @@ namespace imu {
       maybe<typename S::value_type>();
   }
 
+  template<typename T, typename S>
+  inline maybe<T> first(const maybe<S>& s) {
+    return s ? first<T, S>(*s) : maybe<T>();
+  }
+
+  template<typename F, typename S>
+  inline const F& first(const std::pair<F, S>& p) {
+    return p.first;
+  }
+
+  template<typename T, typename F, typename S>
+  inline const T& first(const std::pair<F, S>& p) {
+    return value_cast<T>(p.first);
+  }
+
+  template<typename... T>
+  inline decltype(auto) first(const std::tuple<T...>& t) {
+    return std::get<0>(t);
+  }
+
+  template<typename T, typename... TS>
+  inline decltype(auto) first(const std::tuple<TS...>& t) {
+    return value_cast<T>(std::get<0>(t));
+  }
+
   /**
    * @brief Same as first(rest(s))
    *
@@ -212,6 +237,37 @@ namespace imu {
     return first<T, S>(rest(s));
   }
 
+  template<typename S>
+  inline maybe<typename S::value_type>
+  second(const std::shared_ptr<S>& s) {
+    return first(rest(s));
+  }
+
+  template<typename T, typename S>
+  inline maybe<T> second(const maybe<S>& s) {
+    return s ? second<T, S>(*s) : maybe<T>();
+  }
+
+  template<typename F, typename S>
+  inline const S& second(const std::pair<F, S>& p) {
+    return p.second;
+  }
+
+  template<typename T, typename F, typename S>
+  inline const T& second(const std::pair<F, S>& p) {
+    return value_cast<T>(p.second);
+  }
+
+  template<typename... T>
+  inline decltype(auto) second(const std::tuple<T...>& t) {
+    return std::get<1>(t);
+  }
+
+  template<typename T, typename... TS>
+  inline decltype(auto) second(const std::tuple<TS...>& t) {
+    return value_cast<T>(std::get<1>(t));
+  }
+
   /**
    * @brief Returns the last element of any sequence.
    * The value will be cast to the specified type <b>T</b>.
@@ -261,6 +317,13 @@ namespace imu {
     first<T, S>(nthrest(idx, s));
   }
   */
+
+  template<typename V, typename K, typename M>
+  inline auto get(std::shared_ptr<M>& m, const K& k)
+    -> decltype(m->template get<V>(k)) {
+    return m->template get<V>(k);
+  }
+
   /**
    * @brief Reduces a sequence of values to a single value.
    * The values get reduced by iteratively computing
@@ -355,7 +418,7 @@ namespace imu {
   inline std::shared_ptr<T> into(
     const std::shared_ptr<T>& to, const std::shared_ptr<S>& from) {
 
-    typedef typename T::value_type value_type;
+    typedef typename S::value_type value_type;
 
     return reduce([](const std::shared_ptr<T>& s, const value_type& x) {
         return conj(s, x);

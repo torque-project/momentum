@@ -40,6 +40,23 @@ namespace imu {
       delete pad;
     }
 
+    inline value& operator= (const value& cpy)
+    {
+      if (cpy.pad) {
+        delete pad;
+        pad = cpy.pad->clone();
+      }
+      return *this;
+    }
+
+    inline value& operator= (value&& other)
+    {
+      std::swap(pad, other.pad);
+      delete other.pad;
+      other.pad = nullptr;
+      return *this;
+    }
+
     inline bool is_set() const {
       return (bool) pad;
     }
@@ -63,6 +80,11 @@ namespace imu {
 
     inline friend bool operator== (const value& l, const value& r) {
       return l.pad->equiv(r.pad);
+    }
+
+    template<typename T>
+    inline friend bool operator== (const value& l, const T& r) {
+      return l.get<T>() == r;
     }
 
     inline const std::type_info& type() const {
