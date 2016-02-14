@@ -43,7 +43,7 @@ namespace imu {
    *
    */
   template<typename S>
-  inline bool is_empty(const std::shared_ptr<S>& s) {
+  inline bool is_empty(const S& s) {
     return !s || s->is_empty();
   }
 
