@@ -11,16 +11,13 @@ namespace imu {
   namespace ty {
 
     template<typename Value = value, typename mixin = no_mixin>
-    struct basic_list {
+    struct basic_list : public mixin {
 
       typedef std::shared_ptr<basic_list> p;
 
       // the type store in this list. by default this is
       // a generic type that can store any value
       typedef Value value_type;
-
-      // a mixin can extra hold user data in this type
-      mixin      _mixin;
 
       uint64_t   _count;
       value_type _first;
@@ -36,6 +33,24 @@ namespace imu {
         , _first(v)
         , _rest(l)
       {}
+
+      static inline p factory() {
+        return p();
+      }
+
+      template<typename Val, typename... Vals>
+      static inline p factory(const Val& val, Vals... vals) {
+        return nu<basic_list>(val, factory(vals...));
+      }
+
+      template<typename T>
+      static inline p from_std(const T& coll) {
+        auto out = nu<basic_list>();
+        for (auto& val : coll) {
+          out = nu<basic_list>(val, out);
+        }
+        return out;
+      }
 
       inline bool is_empty() const {
         return _count == 0;
@@ -70,12 +85,23 @@ namespace imu {
   }
 
   inline ty::list::p list() {
-    return ty::list::p();
+    return ty::list::factory();
   }
 
   template<typename Val, typename... Vals>
   inline ty::list::p list(const Val& val, Vals... vals) {
-    return nu<ty::list>(val, list(vals...));
+    return ty::list::factory(val, vals...);
+  }
+
+  template<typename T>
+  inline auto list(const T& coll)
+    -> decltype(std::begin(coll), std::end(coll), ty::list::p()) {
+    return ty::list::from_std(coll);
+  }
+
+  template<typename T>
+  inline ty::list::p list(std::initializer_list<T> l) {
+    return ty::list::from_std(l);
   }
 
   /**
@@ -98,20 +124,11 @@ namespace imu {
     }
   }
 
-  template<typename T>
-  inline ty::list::p list(std::initializer_list<T> l) {
-    auto out = nu<ty::list>();
-    for (auto& val : l) {
-      out = nu<ty::list>(val, out);
-    }
-    return out;
-  }
-
   // @cond HIDE
-  template<typename T, typename X>
-  inline typename ty::basic_list<T>::p
-  conj(const std::shared_ptr<ty::basic_list<T>>& l, const X& v) {
-    return nu<ty::basic_list<T>>(v, l);
+  template<typename X, typename... T>
+  inline typename ty::basic_list<T...>::p
+  conj(const typename ty::basic_list<T...>::p& l, const X& v) {
+    return nu<ty::basic_list<T...>>(v, l);
   }
   // @endcond
 }
