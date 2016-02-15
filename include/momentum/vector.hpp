@@ -118,14 +118,12 @@ namespace imu {
       , typename leaf  = leaf
       , typename mixin = no_mixin
       >
-    struct basic_vector {
+    struct basic_vector : public mixin {
 
       typedef std::shared_ptr<basic_vector> p;
       typedef typename node::base base_node;
 
       typedef value value_type;
-
-      mixin _mixin;
 
       uint64_t _cnt;
       uint64_t _shift;
