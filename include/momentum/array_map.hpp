@@ -63,9 +63,18 @@ namespace imu {
       inline maybe<T> get(const K0& k) {
         int64_t idx = find(k);
         if (idx != -1) {
-          return maybe<T>(_values[idx].second.template get<T>());
+          return maybe<T>(value_cast<T>(_values[idx].second));
         }
         return maybe<T>();
+      }
+
+      template<typename K0>
+      inline maybe<val_type> get(const K0& k) {
+        int64_t idx = find(k);
+        if (idx != -1) {
+          return maybe<val_type>(_values[idx].second);
+        }
+        return maybe<val_type>();
       }
 
       template<typename K0>

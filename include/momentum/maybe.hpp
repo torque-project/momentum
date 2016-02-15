@@ -11,7 +11,7 @@ struct maybe {
     : ref(nullptr)
   {}
 
-  inline maybe(const type& r)
+  inline explicit maybe(const type& r)
     : ref(std::addressof(r))
   {}
 
@@ -46,15 +46,20 @@ template<typename T>
 inline bool operator== (const maybe<T>& l, const maybe<T>& r) {
   return *l.ref == *r.ref;
 }
-
+/*
 template<typename T>
 inline bool operator== (const maybe<T>& l, const typename maybe<T>::type& r) {
   return *l.ref == r;
 }
-
+*/
 template<typename T>
 inline bool operator== (const typename maybe<T>::type& l, const maybe<T>& r) {
   return *r.ref == l;
+}
+
+template<typename T, typename S>
+inline bool operator== (const maybe<T>& l, const S& r) {
+  return *l.ref == r;
 }
 
 template<typename T>
