@@ -9,7 +9,7 @@ namespace imu {
   namespace ty {
 
     template<typename K = value, typename V = value, typename mixin = no_mixin>
-    struct basic_array_map {
+    struct basic_array_map : public mixin {
 
       typedef std::shared_ptr<basic_array_map> p;
 
@@ -22,7 +22,6 @@ namespace imu {
       typedef typename table_type::iterator       iterator;
       typedef typename table_type::const_iterator const_iterator;
 
-      mixin      _mixin;
       table_type _values;
 
       inline basic_array_map(const basic_array_map& m)
