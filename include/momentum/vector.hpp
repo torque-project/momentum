@@ -93,7 +93,7 @@ namespace imu {
       typedef std::shared_ptr<basic_leaf> p;
       typedef base_node<mixin> base;
 
-      std::vector<typename Value::p> _arr;
+      std::vector<Value> _arr;
 
       inline basic_leaf()
       {}
@@ -102,10 +102,10 @@ namespace imu {
         : _arr(a->_arr)
       {}
 
-      inline basic_leaf(const typename Value::p& val)
+      inline basic_leaf(const Value& val)
       { _arr.push_back(val); }
 
-      inline const value::p& operator[](uint64_t n) const {
+      inline const Value& operator[](uint64_t n) const {
         return _arr[n];
       }
     };
@@ -175,7 +175,7 @@ namespace imu {
       }
 
       inline const value_type& nth(uint64_t n) const {
-        return *(*leaf_for(n))[n & 0x01f];
+        return (*leaf_for(n))[n & 0x01f];
       }
 
       template<typename T>
@@ -268,7 +268,7 @@ namespace imu {
       }
 
       inline const value_type& first() const {
-        return *(*_leaf)[_off];
+        return (*_leaf)[_off];
       };
 
       inline p rest() const {
