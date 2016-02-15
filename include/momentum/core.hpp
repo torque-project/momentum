@@ -314,10 +314,17 @@ namespace imu {
    *
    */
   template<typename T, typename S>
-  inline auto nth(std::shared_ptr<S>& s, uint64_t idx)
+  inline auto nth(const S& s, uint64_t idx)
     -> decltype(s->template nth<T>(idx)) {
     return s->template nth<T>(idx);
   }
+
+  template<typename S>
+  inline auto nth(const S& s, uint64_t idx)
+    -> decltype(s->nth(idx)) {
+    return s->nth(idx);
+  }
+
   /*
   template<typename T, typename S>
   inline const T& nth(std::shared_ptr<S>& s, uint64_t idx) {
