@@ -160,6 +160,15 @@ namespace imu {
         }
       }
 
+      template<typename T>
+      static inline p from_std(const T& coll) {
+        auto out = nu<basic_vector>();
+        for (auto& val : coll) {
+          out = nu<basic_vector>(out, val);
+        }
+        return out;
+      }
+
       inline bool is_empty() const {
         return _cnt == 0;
       }
@@ -302,20 +311,18 @@ namespace imu {
   }
 
   template<typename T>
+  inline auto vector(const T& coll)
+    -> decltype(std::begin(coll), std::end(coll), ty::list::p()) {
+    return ty::vector::from_std(coll);
+  }
+
+  template<typename T>
   inline ty::vector::p vector(std::initializer_list<T> l) {
-    auto out = nu<ty::vector>();
-    for (auto& val : l) {
-      out = nu<ty::vector>(out, val);
-    }
-    return out;
+    return ty::vector::from_std(l);
   }
 
   inline ty::vector::p vector(std::initializer_list<value> l) {
-    auto out = nu<ty::vector>();
-    for (auto& val : l) {
-      out = nu<ty::vector>(out, nu<value>(val));
-    }
-    return out;
+    return ty::vector::from_std(l);
   }
 
   // @cond HIDE
