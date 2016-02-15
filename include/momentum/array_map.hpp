@@ -40,6 +40,18 @@ namespace imu {
         assoc(kvs...);
       }
 
+      template<typename T>
+      static inline p from_std(const T& coll) {
+        p out = nu<basic_array_map>();
+        auto i = coll.begin();
+        while (i != coll.end()) {
+          auto k = i++;
+          auto v = i++;
+          out->assoc(*k, *v);
+        }
+        return out;
+      }
+
       inline bool is_empty() const {
         return _values.size() == 0;
       }
@@ -115,6 +127,12 @@ namespace imu {
   template<typename... T>
   inline ty::array_map::p array_map(const T&... elements) {
     return nu<ty::array_map>(elements...);
+  }
+
+  template<typename T>
+  inline auto array_map(const T& coll)
+    -> decltype(std::begin(coll), std::end(coll), ty::array_map::p()) {
+    return ty::array_map::from_std(coll);
   }
 
   inline decltype(auto) seq(const ty::array_map::p& m) {
