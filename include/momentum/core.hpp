@@ -7,7 +7,6 @@
 #pragma once
 
 #include "exceptions.hpp"
-#include "list.hpp"
 #include "maybe.hpp"
 #include "util.hpp"
 #include "value.hpp"
@@ -20,6 +19,14 @@
  *
  */
 namespace imu {
+
+  namespace ty {
+
+    template<typename V = value, typename M = no_mixin>
+    struct basic_list;
+
+    typedef std::shared_ptr<basic_list<>> cons;
+  }
 
   /**
    * Gets the nil instance for a given momentum type
@@ -43,7 +50,7 @@ namespace imu {
    *
    */
   template<typename S>
-  inline bool is_empty(const S& s) {
+  inline bool is_empty(const std::shared_ptr<S>& s) {
     return !s || s->is_empty();
   }
 
@@ -56,7 +63,7 @@ namespace imu {
    *
    */
   template<typename S>
-  inline auto is_seq(const S& s)
+  inline auto is_seq(const std::shared_ptr<S>& s)
     -> decltype(s->first(), s->rest(), bool()) {
 
     return (bool) s;
@@ -73,7 +80,7 @@ namespace imu {
    *
    */
   template<typename S>
-  inline auto seq(const S& s)
+  inline auto seq(const std::shared_ptr<S>& s)
     -> decltype(s->first(), s->rest(), typename S::p()) {
 
     return s;
@@ -367,16 +374,16 @@ namespace imu {
    * @return Returns the result of the apply f to every value in the sequence.
    */
   template<typename F, typename S>
-  inline ty::list::p map(
+  inline ty::cons map(
     const F& f, const std::shared_ptr<S>& x) {
 
     typedef type_traits::lambda_traits<F> signature_t;
     typedef typename signature_t::template arg<0>::decayed arg_t;
 
-    return reduce([=](const ty::list::p& s, const arg_t& x) {
+    return reduce([=](const ty::cons& s, const arg_t& x) {
         return conj(s, f(x));
       },
-      list(),
+      ty::cons(),
       seq(x));
   }
 
@@ -392,16 +399,16 @@ namespace imu {
    * @return Returns the filtered sequence.
    */
   template<typename F, typename S>
-  inline ty::list::p filter(
+  inline ty::cons filter(
     const F& pred, const std::shared_ptr<S>& x) {
 
     typedef type_traits::lambda_traits<F> signature_t;
     typedef typename signature_t::template arg<0>::decayed arg_t;
 
-    return reduce([=](const ty::list::p& s, const arg_t& x) {
+    return reduce([=](const ty::cons& s, const arg_t& x) {
         return pred(x) ? conj(s, x) : s;
       },
-      list(),
+      ty::cons(),
       seq(x));
   }
 
@@ -437,12 +444,12 @@ namespace imu {
    * @return Returns the newly formed sequence.
    */
   template<typename T>
-  inline ty::list::p take(uint64_t n, const std::shared_ptr<T>& x) {
+  inline ty::cons take(uint64_t n, const std::shared_ptr<T>& x) {
     auto s = seq(x);
     if (n > 0 && !is_empty(s)) {
         return conj(take(n-1, rest(s), first(s)));
     }
-    return nil<ty::list>();
+    return ty::cons();
   }
 
   /**
@@ -456,7 +463,7 @@ namespace imu {
    * @return Returns the newly formed sequence.
    */
   template<typename F, typename S>
-  inline ty::list::p take_while(const F& pred, const std::shared_ptr<S>& s) {
+  inline ty::cons take_while(const F& pred, const std::shared_ptr<S>& s) {
 
     typedef type_traits::lambda_traits<F> signature_t;
     typedef typename signature_t::template arg<0>::decayed arg_t;
@@ -466,7 +473,7 @@ namespace imu {
       return conj(take_while(pred, rest(s), f));
     }
 
-    return list();
+    return ty::cons();
   }
 
   /**

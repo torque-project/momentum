@@ -56,6 +56,11 @@ void test_list_3() {
   assert(count(lst) == 2);
 }
 
+void test_list_4() {
+
+  assert(list(1, 2, 3) == list(1, 2, 3));
+}
+
 void test_vector_0() {
 
   auto v = vector();
@@ -353,6 +358,7 @@ int main() {
   test_list_1();
   test_list_2();
   test_list_3();
+  test_list_4();
 
   std::cout << "All list tests passed" << std::endl;
 

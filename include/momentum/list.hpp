@@ -10,7 +10,7 @@ namespace imu {
 
   namespace ty {
 
-    template<typename Value = value, typename mixin = no_mixin>
+    template<typename Value, typename mixin>
     struct basic_list : public mixin {
 
       typedef std::shared_ptr<basic_list> p;
