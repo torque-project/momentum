@@ -56,7 +56,7 @@ namespace imu {
    *
    */
   template<typename S>
-  inline auto is_seq(const std::shared_ptr<S>& s)
+  inline auto is_seq(const S& s)
     -> decltype(s->first(), s->rest(), bool()) {
 
     return (bool) s;
@@ -73,7 +73,7 @@ namespace imu {
    *
    */
   template<typename S>
-  inline auto seq(const std::shared_ptr<S>& s)
+  inline auto seq(const S& s)
     -> decltype(s->first(), s->rest(), typename S::p()) {
 
     return s;
