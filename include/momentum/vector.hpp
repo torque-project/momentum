@@ -137,12 +137,7 @@ namespace imu {
         , _tail(nu<leaf>())
       {}
 
-      template<typename T>
-      inline basic_vector(const p& v, const T& val)
-        : basic_vector(v, nu<value>(val))
-      {}
-
-      inline basic_vector(const p& v, const value::p& val)
+      inline basic_vector(const p& v, const Value& val)
         : _cnt(v->_cnt + 1)
         , _shift(v->_shift)
         , _tail(v->_tail)
@@ -217,7 +212,7 @@ namespace imu {
         throw out_of_bounds(n, _cnt);
       }
 
-      inline void extend_root(const basic_vector::p& v, const value::p& val) {
+      inline void extend_root(const basic_vector::p& v, const value_type& val) {
 
         auto new_leaf = nu<leaf>(v->_tail);
         _tail = nu<leaf>(val);
@@ -316,10 +311,6 @@ namespace imu {
 
   template<typename T>
   inline ty::vector::p vector(std::initializer_list<T> l) {
-    return ty::vector::from_std(l);
-  }
-
-  inline ty::vector::p vector(std::initializer_list<value> l) {
     return ty::vector::from_std(l);
   }
 
