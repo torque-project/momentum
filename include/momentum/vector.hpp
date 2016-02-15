@@ -112,9 +112,9 @@ namespace imu {
 
     template<
         typename Value = value
+      , typename mixin = no_mixin
       , typename node  = basic_node<>
       , typename leaf  = basic_leaf<Value>
-      , typename mixin = no_mixin
       >
     struct basic_vector : public mixin {
 
