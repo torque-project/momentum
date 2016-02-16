@@ -333,13 +333,13 @@ namespace imu {
   */
 
   template<typename V, typename K, typename M>
-  inline auto get(M& m, const K& k)
+  inline auto get(const M& m, const K& k)
     -> decltype(m->template get<V>(k)) {
     return m->template get<V>(k);
   }
 
   template<typename K, typename M>
-  inline auto get(M& m, const K& k)
+  inline auto get(const M& m, const K& k)
     -> decltype(m->get(k)) {
     return m->get(k);
   }
