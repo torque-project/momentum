@@ -357,7 +357,7 @@ namespace imu {
    * @return Returns the result of the reduction or x if s is empty.
    */
   template<typename F, typename T, typename S>
-  inline T reduce(const F& f, const T& init, const std::shared_ptr<S>& x) {
+  inline T reduce(const F& f, const T& init, const S& x) {
 
     typedef type_traits::lambda_traits<F> signature_t;
     typedef typename signature_t::template arg<1>::decayed arg_t;
@@ -385,8 +385,7 @@ namespace imu {
    * @return Returns the result of the apply f to every value in the sequence.
    */
   template<typename F, typename S>
-  inline ty::cons map(
-    const F& f, const std::shared_ptr<S>& x) {
+  inline ty::cons map(const F& f, const S& x) {
 
     typedef type_traits::lambda_traits<F> signature_t;
     typedef typename signature_t::template arg<0>::decayed arg_t;
@@ -410,8 +409,7 @@ namespace imu {
    * @return Returns the filtered sequence.
    */
   template<typename F, typename S>
-  inline ty::cons filter(
-    const F& pred, const std::shared_ptr<S>& x) {
+  inline ty::cons filter(const F& pred, const S& x) {
 
     typedef type_traits::lambda_traits<F> signature_t;
     typedef typename signature_t::template arg<0>::decayed arg_t;
@@ -433,12 +431,11 @@ namespace imu {
    * @return Returns the newly formed sequence.
    */
   template<typename T, typename S>
-  inline std::shared_ptr<T> into(
-    const std::shared_ptr<T>& to, const std::shared_ptr<S>& from) {
+  inline decltype(auto) into(const T& to, const S& from) {
 
-    typedef typename S::value_type value_type;
+    typedef decltype(from->first()) value_type;
 
-    return reduce([](const std::shared_ptr<T>& s, const value_type& x) {
+    return reduce([](const T& s, const value_type& x) {
         return conj(s, x);
       },
       to,
@@ -474,7 +471,7 @@ namespace imu {
    * @return Returns the newly formed sequence.
    */
   template<typename F, typename S>
-  inline ty::cons take_while(const F& pred, const std::shared_ptr<S>& s) {
+  inline ty::cons take_while(const F& pred, const S& s) {
 
     typedef type_traits::lambda_traits<F> signature_t;
     typedef typename signature_t::template arg<0>::decayed arg_t;
@@ -496,7 +493,7 @@ namespace imu {
    * @return Returns the newly formed sequence.
    */
   template<typename S>
-  inline decltype(auto) drop(uint64_t n, const std::shared_ptr<S>& x) {
+  inline decltype(auto) drop(uint64_t n, const S& x) {
 
     auto head = seq(x);
     auto m    = n;
@@ -519,7 +516,7 @@ namespace imu {
    * @return Returns the newly formed sequence.
    */
   template<typename F, typename S>
-  inline decltype(auto) drop_while(const F& pred, const std::shared_ptr<S>& s) {
+  inline decltype(auto) drop_while(const F& pred, const S& s) {
 
     typedef type_traits::lambda_traits<F> signature_t;
     typedef typename signature_t::template arg<0>::decayed arg_t;
@@ -543,7 +540,7 @@ namespace imu {
    * @return Returns the newly formed sequence.
    */
   template<typename F, typename S>
-  inline bool is_every(const F& pred, const std::shared_ptr<S>& x) {
+  inline bool is_every(const F& pred, const S& x) {
 
     typedef type_traits::lambda_traits<F> signature_t;
     typedef typename signature_t::template arg<0>::decayed arg_t;
@@ -613,7 +610,7 @@ namespace imu {
   }
   /*
   template<typename S>
-  inline uint64_t count(const std::shared_ptr<S>& s) {
+  inline uint64_t count(const S& s) {
     return reduce(
       [](uint64_t s, const typename S::value_type&) {
         return s + 1;
