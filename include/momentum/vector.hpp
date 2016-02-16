@@ -12,7 +12,7 @@ namespace imu {
   namespace ty {
 
     template<typename mixin = no_mixin>
-    struct base_node {
+    struct base_node : public mixin {
 
       typedef std::shared_ptr<base_node> p;
 
@@ -118,7 +118,8 @@ namespace imu {
       >
     struct basic_vector : public mixin {
 
-      typedef std::shared_ptr<basic_vector> p;
+      typedef typename mixin::template semantics<basic_vector>::p p;
+
       typedef typename node::base base_node;
       typedef leaf leaf_type;
 
@@ -231,7 +232,7 @@ namespace imu {
     typedef basic_vector<> vector;
 
     template<typename V = vector, typename mixin = no_mixin>
-    struct basic_chunked_seq {
+    struct basic_chunked_seq : public no_mixin {
 
       typedef std::shared_ptr<basic_chunked_seq> p;
 

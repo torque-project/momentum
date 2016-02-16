@@ -11,7 +11,7 @@ namespace imu {
     template<typename K = value, typename V = value, typename mixin = no_mixin>
     struct basic_array_map : public mixin {
 
-      typedef std::shared_ptr<basic_array_map> p;
+      typedef typename mixin::template semantics<basic_array_map>::p p;
 
       typedef K key_type;
       typedef V val_type;

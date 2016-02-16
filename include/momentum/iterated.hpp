@@ -7,7 +7,7 @@ namespace imu {
   namespace ty {
 
     template<typename T, typename mixin = no_mixin>
-    struct basic_iterated_seq {
+    struct basic_iterated_seq : public mixin {
 
       typedef std::shared_ptr<basic_iterated_seq> p;
 

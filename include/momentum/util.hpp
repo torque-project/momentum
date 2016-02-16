@@ -7,8 +7,10 @@
 namespace imu {
 
   template<typename T, typename... Args>
-  inline std::shared_ptr<T> nu(Args... args) {
-    return std::make_shared<T>(args...);
+  inline auto nu(Args... args)
+    -> decltype(typename T::p()) {
+    typedef typename T::template semantics<T> sem;
+    return sem::allocate(args...);
   }
 
   /**
@@ -16,8 +18,19 @@ namespace imu {
    * mixins are used for a type
    *
    */
-  struct no_mixin
-  {};
+  struct no_mixin {
+
+    template<typename T>
+    struct semantics {
+
+      typedef std::shared_ptr<T> p;
+
+      template<typename... TS>
+      static inline p allocate(TS... args) {
+        return std::make_shared<T>(args...);
+      }
+    };
+  };
 
   /**
    * Type analysis utilities that are not in the stl type traits
