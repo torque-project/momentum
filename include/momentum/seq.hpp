@@ -7,8 +7,7 @@ namespace imu {
   namespace seqs {
 
     template<typename S, typename T>
-    inline bool equiv(
-      const std::shared_ptr<S>& s, const std::shared_ptr<T>& x) {
+    inline bool equiv(const S& s, const T& x) {
 
       auto h1 = s;
       auto h2 = seq(x);

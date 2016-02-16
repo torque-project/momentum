@@ -50,7 +50,7 @@ namespace imu {
    *
    */
   template<typename S>
-  inline bool is_empty(const std::shared_ptr<S>& s) {
+  inline bool is_empty(const S& s) {
     return !s || s->is_empty();
   }
 
@@ -63,7 +63,7 @@ namespace imu {
    *
    */
   template<typename S>
-  inline auto is_seq(const std::shared_ptr<S>& s)
+  inline auto is_seq(const S& s)
     -> decltype(s->first(), s->rest(), bool()) {
 
     return (bool) s;
@@ -80,11 +80,17 @@ namespace imu {
    *
    */
   template<typename S>
-  inline auto seq(const std::shared_ptr<S>& s)
+  inline auto seq(const S& s)
     -> decltype(s->first(), s->rest(), typename S::p()) {
-
     return s;
   }
+
+  template<typename S>
+  inline auto seq(const std::shared_ptr<S>& s)
+    -> decltype(s->first(), s->rest(), typename S::p()) {
+    return s;
+  }
+
 
   /**
    * @brief Returns the first element of any sequence.
@@ -97,7 +103,7 @@ namespace imu {
    *
    */
   template<typename T, typename S>
-  inline maybe<T> first(const std::shared_ptr<S>& s) {
+  inline maybe<T> first(const S& s) {
     return !is_empty(s) ?
       maybe<T>(s->template first<T>())
       :
@@ -114,12 +120,12 @@ namespace imu {
    *
    */
   template<typename S>
-  inline maybe<typename S::value_type>
-  first(const std::shared_ptr<S>& s) {
+  inline decltype(auto) first(const S& s) {
+    typedef decltype(s->first()) value_type;
     return !is_empty(s) ?
-      maybe<typename S::value_type>(s->first())
+      maybe<value_type>(s->first())
       :
-      maybe<typename S::value_type>();
+      maybe<value_type>();
   }
 
   template<typename T, typename S>
@@ -240,13 +246,12 @@ namespace imu {
    *
    */
   template<typename T, typename S>
-  inline maybe<T> second(const std::shared_ptr<S>& s) {
+  inline maybe<T> second(const S& s) {
     return first<T, S>(rest(s));
   }
 
   template<typename S>
-  inline maybe<typename S::value_type>
-  second(const std::shared_ptr<S>& s) {
+  inline decltype(auto) second(const S& s) {
     return first(rest(s));
   }
 
@@ -284,7 +289,7 @@ namespace imu {
    *
    */
   template<typename T, typename S>
-  inline const T& last(const std::shared_ptr<S>& s) {
+  inline const T& last(const S& s) {
 
     auto head = s;
     auto next = rest(head);

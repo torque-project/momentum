@@ -78,13 +78,13 @@ namespace imu {
       return dynamic_cast<const pad_type*>(pad)->value;
     }
 
-    inline friend bool operator== (const value& l, const value& r) {
-      return l.pad->equiv(r.pad);
+    inline bool operator== (const value& r) const {
+      return pad->equiv(r.pad);
     }
 
     template<typename T>
-    inline friend bool operator== (const value& l, const T& r) {
-      return l.get<T>() == r;
+    inline bool operator== (const T& r) const {
+      return get<T>() == r;
     }
 
     inline const std::type_info& type() const {

@@ -65,7 +65,7 @@ void test_vector_0() {
 
   auto v = vector();
   assert(is_empty(v));
-  assert(seq(v) == nullptr);
+  assert(!seq(v));
 
   v = conj(v, 1);
   assert(first<int>(seq(v)) == 1);

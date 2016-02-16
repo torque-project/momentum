@@ -188,9 +188,12 @@ namespace imu {
       }
 
       template<typename S>
-      inline friend bool operator== (
-        const p& self, const std::shared_ptr<S>& x) {
+      inline friend bool operator== (const p& self, const S& x) {
+        return seqs::equiv(seq(self), x);
+      }
 
+      template<typename S>
+      inline friend bool operator== (const p& self, const std::shared_ptr<S>& x) {
         return seqs::equiv(seq(self), x);
       }
 
@@ -275,9 +278,12 @@ namespace imu {
       }
 
       template<typename S>
-      inline friend bool operator== (
-        const p& self, const std::shared_ptr<S> x) {
+      inline friend bool operator== (const p& self, const S& x) {
+        return seqs::equiv(self, x);
+      }
 
+      template<typename S>
+      inline friend bool operator== (const p& self, const std::shared_ptr<S>& x) {
         return seqs::equiv(self, x);
       }
     };
