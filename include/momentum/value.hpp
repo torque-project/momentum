@@ -161,7 +161,7 @@ namespace imu {
   }
 
   template<typename T, typename X>
-  inline const T* value_cast(const X* x) {
+  inline T *const value_cast(X const* x) {
     return static_cast<const T*>(x);
   }
 

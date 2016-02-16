@@ -570,7 +570,7 @@ namespace imu {
    */
   template<typename T, typename F, typename S>
   inline maybe<T>
-  some(const F& pred, const std::shared_ptr<S>& s) {
+  some(const F& pred, const S& s) {
 
     typedef type_traits::lambda_traits<F> signature_t;
     typedef typename signature_t::template arg<0>::decayed arg_t;
@@ -593,7 +593,7 @@ namespace imu {
   }
 
   template<typename F, typename S>
-  inline decltype(auto) some(const F& pred, const std::shared_ptr<S>& s) {
+  inline decltype(auto) some(const F& pred, const S& s) {
     return some<value>(pred, s);
   }
 
@@ -606,7 +606,7 @@ namespace imu {
    *
    */
   template<typename S>
-  inline auto count(const std::shared_ptr<S>& s)
+  inline auto count(const S& s)
     -> decltype(s->count(), uint64_t()) {
 
     return s ? s->count() : 0;
