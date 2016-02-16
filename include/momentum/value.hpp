@@ -159,4 +159,9 @@ namespace imu {
   inline const T& value_cast(const X& x) {
     return static_cast<const T&>(x);
   }
+
+  template<typename T, typename X>
+  inline const T& value_cast(const std::shared_ptr<X>& x) {
+    return std::static_pointer_cast<const T&>(x);
+  }
 }
