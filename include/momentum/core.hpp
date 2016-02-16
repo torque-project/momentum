@@ -81,16 +81,9 @@ namespace imu {
    */
   template<typename S>
   inline auto seq(const S& s)
-    -> decltype(s->first(), s->rest(), typename S::p()) {
+    -> decltype(s->first(), s->rest(), s) {
     return s;
   }
-
-  template<typename S>
-  inline auto seq(const std::shared_ptr<S>& s)
-    -> decltype(s->first(), s->rest(), typename S::p()) {
-    return s;
-  }
-
 
   /**
    * @brief Returns the first element of any sequence.
@@ -171,21 +164,21 @@ namespace imu {
   namespace sfinae {
 
     template<typename S>
-    inline auto rest_impl_seq(const std::shared_ptr<S>& s)
+    inline auto rest_impl_seq(const S& s)
       -> decltype(s->rest()) {
 
-      return s ? s->rest() : std::shared_ptr<S>();
+      return s ? s->rest() : S();
     }
 
     template<typename S>
-    inline auto rest_impl(const std::shared_ptr<S>& s, int)
+    inline auto rest_impl(const S& s, int)
       -> decltype(rest_impl_seq(s)) {
 
       return rest_impl_seq(s);
     }
 
     template<typename S>
-    inline auto rest_impl(const std::shared_ptr<S>& s, long)
+    inline auto rest_impl(const S& s, long)
       -> decltype(rest_impl_seq(seq(s), 0)) {
 
       return rest_impl_seq(seq(s));
@@ -204,9 +197,8 @@ namespace imu {
    *
    */
   template<typename S>
-  inline auto rest(const std::shared_ptr<S>& s)
+  inline auto rest(const S& s)
     -> decltype(sfinae::rest_impl(s, 0)) {
-
     return sfinae::rest_impl(s, 0);
   }
 
