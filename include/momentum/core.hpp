@@ -452,10 +452,10 @@ namespace imu {
    * @return Returns the newly formed sequence.
    */
   template<typename T>
-  inline ty::cons take(uint64_t n, const std::shared_ptr<T>& x) {
+  inline ty::cons take(uint64_t n, const T& x) {
     auto s = seq(x);
     if (n > 0 && !is_empty(s)) {
-        return conj(take(n-1, rest(s), first(s)));
+      return conj(take(n-1, rest(s)), *first(s));
     }
     return ty::cons();
   }
@@ -608,6 +608,7 @@ namespace imu {
 
     return s ? s->count() : 0;
   }
+
   /*
   template<typename S>
   inline uint64_t count(const S& s) {
@@ -617,4 +618,13 @@ namespace imu {
       }, 0, s);
   }
   */
+
+  template<typename T>
+  inline ty::cons partition(uint64_t n, const T& x) {
+    auto s = seq(x);
+    if (!is_empty(s)) {
+      return conj(partition(n, nthrest(n, s)), take(n, s));
+    }
+    return ty::cons();
+  }
 }

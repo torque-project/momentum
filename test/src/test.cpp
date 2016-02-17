@@ -366,6 +366,31 @@ void test_into_3() {
   assert(get<int>(m1, 5) == 3);
 }
 
+void test_take_0() {
+
+  auto lst  = list(1, 2, 3, 4);
+  auto lst2 = imu::take(2, lst);
+
+  auto fst = imu::first<int>(lst2);
+  auto snd = imu::second<int>(lst2);
+
+  assert(fst && snd);
+  assert(fst == 1);
+  assert(snd == 2);
+}
+
+void test_partition_0() {
+
+  auto lst  = list(1, 2, 3, 4);
+  auto lst2 = imu::partition(2, lst);
+
+  auto fst = imu::first<imu::ty::cons, imu::ty::cons>(lst2);
+  auto snd = imu::second<imu::ty::cons, imu::ty::cons>(lst2);
+
+  assert(fst && snd);
+  assert(imu::first<int>(fst) == 1 && imu::second<int>(fst) == 2);
+  assert(imu::first<int>(snd) == 3 && imu::second<int>(snd) == 4);
+}
 
 int main() {
 
@@ -409,6 +434,8 @@ int main() {
   test_into_1();
   test_into_2();
   test_into_3();
+  test_take_0();
+  test_partition_0();
 
   std::cout << "All core tests passed" << std::endl;
 

@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <memory>
+#include <typeinfo>
 #include <type_traits>
 
 namespace imu {
