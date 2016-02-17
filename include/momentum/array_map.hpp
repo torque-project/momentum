@@ -70,7 +70,7 @@ namespace imu {
       typedef array_map_kv_seq<basic_array_map, 0> key_seq;
       typedef array_map_kv_seq<basic_array_map, 1> val_seq;
 
-      typedef typename table_type::iterator       iterator;
+      typedef typename table_type::iterator iterator;
       typedef typename table_type::const_iterator const_iterator;
 
       table_type _values;
@@ -239,29 +239,23 @@ namespace imu {
 
   template<typename T>
   struct conjer {
-    template<typename... TS>
-    static inline decltype(auto) conj(
-      const typename ty::basic_array_map<TS...>::p& m, const T& x) {
-
+    template<typename M>
+    static inline decltype(auto) conj(M& m, const T& x) {
       return assoc(m, first(x), second(x));
     }
   };
 
   template<>
   struct conjer<value> {
-    template<typename... TS>
-    static inline decltype(auto) conj(
-      const typename ty::basic_array_map<TS...>::p& m, const value& x) {
-
+    template<typename M>
+    static inline decltype(auto) conj(const M& m, const value& x) {
       auto& p = x.get<typename ty::array_map::value_type>();
       return assoc(m, first(p), second(p));
     }
   };
 
-  template<typename T, typename... TS>
-  inline decltype(auto) conj(
-    const typename ty::basic_array_map<TS...>::p& m, const T& x) {
-
+  template<typename M, typename T>
+  inline decltype(auto) conj(const M& m, const T& x) {
     return conjer<T>::conj(m, x);
   }
 }
