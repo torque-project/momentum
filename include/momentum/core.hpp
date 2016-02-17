@@ -630,4 +630,9 @@ namespace imu {
     }
     return ty::cons();
   }
+
+  template<typename M0, typename M1>
+  inline decltype(auto) merge(const M0& m0, const M1& m1) {
+    return into(m0, seq(m1));
+  }
 }

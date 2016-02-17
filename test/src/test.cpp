@@ -427,6 +427,20 @@ void test_partition_0() {
   assert(imu::first<int>(snd) == 3 && imu::second<int>(snd) == 4);
 }
 
+void test_merge_0() {
+
+  auto m0 = array_map(1, 3, 2, 5);
+  auto m1 = array_map(8, 0, 12, 23);
+
+  auto m  = merge(m0, m1);
+
+  assert(count(m) == 4);
+  assert(get<int>(m, 1)  == 3);
+  assert(get<int>(m, 2)  == 5);
+  assert(get<int>(m, 8)  == 0);
+  assert(get<int>(m, 12) == 23);
+}
+
 int main() {
 
   test_list_0();
@@ -473,6 +487,7 @@ int main() {
   test_into_3();
   test_take_0();
   test_partition_0();
+  test_merge_0();
 
   std::cout << "All core tests passed" << std::endl;
 
