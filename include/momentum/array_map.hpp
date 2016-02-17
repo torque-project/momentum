@@ -154,6 +154,11 @@ namespace imu {
   };
 
   template<typename T>
+  struct real_type<T*> {
+    typedef T type;
+  };
+
+  template<typename T>
   struct real_type<std::shared_ptr<T>> {
     typedef T type;
   };
