@@ -244,13 +244,13 @@ namespace imu {
 
       mixin _mixin;
 
-      vector::p _vec;
-      uint64_t  _idx;
-      uint64_t  _off;
+      typename V::p _vec;
+      uint64_t      _idx;
+      uint64_t      _off;
 
       typename leaf_type::p _leaf;
 
-      inline basic_chunked_seq(const vector::p& v, uint64_t i, uint64_t o)
+      inline basic_chunked_seq(const typename V::p& v, uint64_t i, uint64_t o)
         : _vec(v)
         , _idx(i)
         , _off(o)
@@ -323,16 +323,28 @@ namespace imu {
 
   // @cond HIDE
   template<typename... TS>
-  inline ty::chunked_seq::p seq(
-    const typename ty::basic_vector<TS...>::p& v) {
+  inline decltype(auto) seq(ty::basic_vector<TS...>* const & v) {
 
-    typedef typename std::decay<decltype(*v)>::type V;
-    typedef typename ty::basic_chunked_seq<V> seq;
+    typedef typename ty::basic_vector<TS...>  V;
+    typedef typename ty::basic_chunked_seq<V> S;
 
     if (!v || v->is_empty()) {
-      return typename seq::p();
+      return typename S::p();
     }
-    return nu<seq>(v, 0, 0);
+    return nu<S>(v, 0, 0);
+  }
+
+  template<typename... TS>
+  inline decltype(auto) seq(
+    const std::shared_ptr<ty::basic_vector<TS...>>& v) {
+
+    typedef typename ty::basic_vector<TS...> V;
+    typedef typename ty::basic_chunked_seq<> S;
+
+    if (!v || v->is_empty()) {
+      return typename S::p();
+    }
+    return nu<S>(v, 0, 0);
   }
 
   template<typename T, typename... TS>
