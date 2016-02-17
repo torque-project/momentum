@@ -217,6 +217,26 @@ void test_array_map_4() {
   assert(get<int>(m, bar) == 2);
 }
 
+void test_array_map_5() {
+
+  std::string foo("foo");
+  std::string bar("bar");
+
+  std::vector<value> v = {foo, 1, bar, 2};
+
+  auto m  = array_map(v);
+  auto ks = keys(m);
+
+  assert(count(m) == 2);
+  assert(first<std::string>(ks)  == foo);
+  assert(second<std::string>(ks) == bar);
+
+  auto vs = vals(m);
+
+  assert(count(m) == 2);
+  assert(first<int>(vs)  == 1);
+  assert(second<int>(vs) == 2);
+}
 
 void test_iterated_0() {
 
@@ -275,8 +295,6 @@ void test_reduce_2() {
 }
 
 void test_reduce_3() {
-
-  std::cout << "TEST3" << std::endl;
 
   auto lst = list(1, 2, 3, 4);
   auto prt = partition(2, lst);
@@ -359,7 +377,7 @@ void test_into_1() {
 
 void test_into_2() {
 
-  typedef std::pair<value, value> pair;
+  typedef ty::array_map::value_type pair;
 
   auto lst = list(pair(1, 1), pair(3, 2), pair(5, 3));
   auto m   = into(array_map(), lst);
@@ -434,6 +452,7 @@ int main() {
   test_array_map_2();
   test_array_map_3();
   test_array_map_4();
+  test_array_map_5();
 
   std::cout << "All array_map tests passed" << std::endl;
 

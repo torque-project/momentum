@@ -5,9 +5,56 @@
 #include "semantics.hpp"
 #include "util.hpp"
 
+#include <tuple>
+
 namespace imu {
 
   namespace ty {
+
+    template<typename M, int N, typename mixin = no_mixin>
+    struct array_map_kv_seq : public mixin {
+
+      typedef typename mixin::template semantics<array_map_kv_seq>::p p;
+
+      typedef M map_type;
+      typedef typename map_type::value_type kv_type;
+      typedef typename std::tuple_element<N, kv_type>::type value_type;
+
+      typename map_type::p _m;
+      int64_t              _off;
+
+      inline array_map_kv_seq(typename map_type::p& m, int64_t off)
+        : _m(m), _off(off)
+      {}
+
+      inline array_map_kv_seq(typename map_type::p& m)
+        : array_map_kv_seq(m, 0)
+      {}
+
+      inline bool is_empty() const {
+        return (_off >= _m->_values.size());
+      }
+
+      inline uint64_t count() const {
+        return _m->_values.size();
+      }
+
+      template<typename T>
+      inline const T& first() {
+        return value_cast<T>(std::get<N>(_m->_values[_off]));
+      }
+
+      inline const value_type& first() {
+        return std::get<N>(_m->_values[_off]);
+      }
+
+      inline p rest() {
+        if (!is_empty()) {
+          return nu<array_map_kv_seq>(_m, _off + 1);
+        }
+        return p();
+      }
+    };
 
     template<typename K = value, typename V = value, typename mixin = no_mixin>
     struct basic_array_map : public mixin {
@@ -17,8 +64,11 @@ namespace imu {
       typedef K key_type;
       typedef V val_type;
 
-      typedef std::pair<K, V>         value_type;
+      typedef std::tuple<K, V>        value_type;
       typedef std::vector<value_type> table_type;
+
+      typedef array_map_kv_seq<basic_array_map, 0> key_seq;
+      typedef array_map_kv_seq<basic_array_map, 1> val_seq;
 
       typedef typename table_type::iterator       iterator;
       typedef typename table_type::const_iterator const_iterator;
@@ -64,7 +114,7 @@ namespace imu {
       inline maybe<T> get(const K0& k) {
         int64_t idx = find(k);
         if (idx != -1) {
-          return maybe<T>(value_cast<T>(_values[idx].second));
+          return maybe<T>(value_cast<T>(std::get<1>(_values[idx])));
         }
         return maybe<T>();
       }
@@ -73,7 +123,7 @@ namespace imu {
       inline maybe<val_type> get(const K0& k) {
         int64_t idx = find(k);
         if (idx != -1) {
-          return maybe<val_type>(_values[idx].second);
+          return maybe<val_type>(std::get<1>(_values[idx]));
         }
         return maybe<val_type>();
       }
@@ -145,8 +195,27 @@ namespace imu {
   }
 
   template<typename... TS>
-  inline decltype(auto) seq(const typename ty::basic_array_map<TS...>::p& m) {
+  inline decltype(auto) seq(
+    const std::shared_ptr<ty::basic_array_map<TS...>>& m) {
+
     return iterated(m->begin(), m->end());
+  }
+
+  template<typename... TS>
+  inline decltype(auto) seq(const ty::basic_array_map<TS...>* const & m) {
+    return iterated(m->begin(), m->end());
+  }
+
+  template<typename M>
+  inline decltype(auto) keys(const M& m) {
+    typedef typename semantics::real_type<M>::type type;
+    return nu<typename type::key_seq>(m);
+  }
+
+  template<typename M>
+  inline decltype(auto) vals(const M& m) {
+    typedef typename semantics::real_type<M>::type type;
+    return nu<typename type::val_seq>(m);
   }
 
   template<typename T, typename K, typename V>

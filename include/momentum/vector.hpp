@@ -323,10 +323,11 @@ namespace imu {
 
   // @cond HIDE
   template<typename... TS>
-  inline decltype(auto) seq(ty::basic_vector<TS...>* const & v) {
+  inline decltype(auto) seq(
+    const std::shared_ptr<ty::basic_vector<TS...>>& v) {
 
-    typedef typename ty::basic_vector<TS...>  V;
-    typedef typename ty::basic_chunked_seq<V> S;
+    typedef typename ty::basic_vector<TS...> V;
+    typedef typename ty::basic_chunked_seq<> S;
 
     if (!v || v->is_empty()) {
       return typename S::p();
@@ -335,11 +336,10 @@ namespace imu {
   }
 
   template<typename... TS>
-  inline decltype(auto) seq(
-    const std::shared_ptr<ty::basic_vector<TS...>>& v) {
+  inline decltype(auto) seq(ty::basic_vector<TS...>* const & v) {
 
-    typedef typename ty::basic_vector<TS...> V;
-    typedef typename ty::basic_chunked_seq<> S;
+    typedef typename ty::basic_vector<TS...>  V;
+    typedef typename ty::basic_chunked_seq<V> S;
 
     if (!v || v->is_empty()) {
       return typename S::p();
