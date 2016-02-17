@@ -143,22 +143,25 @@ namespace imu {
     return ty::array_map::from_std(coll);
   }
 
-  inline decltype(auto) seq(const ty::array_map::p& m) {
+  template<typename... TS>
+  inline decltype(auto) seq(const typename ty::basic_array_map<TS...>::p& m) {
     return iterated(m->begin(), m->end());
   }
 
-  template<typename K, typename V>
-  inline ty::array_map::p assoc(
-    const ty::array_map::p& m, const K& k, const V& v) {
+  template<typename K, typename V, typename... TS>
+  inline decltype(auto) assoc(
+    const typename ty::basic_array_map<TS...>::p& m, const K& k, const V& v) {
 
-    return nu<ty::array_map>(*m, k, v);
+    return nu<ty::basic_array_map<TS...>>(*m, k, v);
   }
 
-  template<typename K>
-  inline ty::array_map::p dissoc(const ty::array_map::p& m, const K& k) {
+  template<typename K, typename... TS>
+  inline typename ty::basic_array_map<TS...>::p dissoc(
+    const typename ty::basic_array_map<TS...>::p& m, const K& k) {
+
     auto idx = m->find(k);
     if(idx != -1) {
-      auto ret = nu<ty::array_map>(*m);
+      auto ret = nu<ty::basic_array_map<TS...>>(*m);
       ret->dissoc(idx);
       return ret;
     }
@@ -166,12 +169,30 @@ namespace imu {
   }
 
   template<typename T>
-  inline ty::array_map::p conj(const ty::array_map::p& m, const T& x) {
-    return assoc(m, first(x), second(x));
-  }
+  struct conjer {
+    template<typename... TS>
+    static inline decltype(auto) conj(
+      const typename ty::basic_array_map<TS...>::p& m, const T& x) {
 
-  inline ty::array_map::p conj(const ty::array_map::p& m, const value& x) {
-    auto& p = x.get<typename ty::array_map::value_type>();
-    return assoc(m, first(p), second(p));
+      return assoc(m, first(x), second(x));
+    }
+  };
+
+  template<>
+  struct conjer<value> {
+    template<typename... TS>
+    static inline decltype(auto) conj(
+      const typename ty::basic_array_map<TS...>::p& m, const value& x) {
+
+      auto& p = x.get<typename ty::array_map::value_type>();
+      return assoc(m, first(p), second(p));
+    }
+  };
+
+  template<typename T, typename... TS>
+  inline decltype(auto) conj(
+    const typename ty::basic_array_map<TS...>::p& m, const T& x) {
+
+    return conjer<T>::conj(m, x);
   }
 }
