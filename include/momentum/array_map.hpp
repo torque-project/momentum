@@ -148,11 +148,20 @@ namespace imu {
     return iterated(m->begin(), m->end());
   }
 
-  template<typename K, typename V, typename... TS>
-  inline decltype(auto) assoc(
-    const typename ty::basic_array_map<TS...>::p& m, const K& k, const V& v) {
+  template<typename T>
+  struct real_type {
+    typedef T type;
+  };
 
-    return nu<ty::basic_array_map<TS...>>(*m, k, v);
+  template<typename T>
+  struct real_type<std::shared_ptr<T>> {
+    typedef T type;
+  };
+
+  template<typename T, typename K, typename V>
+  inline decltype(auto) assoc(const T& m, const K& k, const V& v) {
+    typedef typename real_type<T>::type type;
+    return nu<type>(*m, k, v);
   }
 
   template<typename K, typename... TS>
