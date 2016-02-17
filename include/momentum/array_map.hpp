@@ -2,6 +2,7 @@
 
 #include "iterated.hpp"
 #include "maybe.hpp"
+#include "semantics.hpp"
 #include "util.hpp"
 
 namespace imu {
@@ -148,24 +149,9 @@ namespace imu {
     return iterated(m->begin(), m->end());
   }
 
-  template<typename T>
-  struct real_type {
-    typedef T type;
-  };
-
-  template<typename T>
-  struct real_type<T*> {
-    typedef T type;
-  };
-
-  template<typename T>
-  struct real_type<std::shared_ptr<T>> {
-    typedef T type;
-  };
-
   template<typename T, typename K, typename V>
   inline decltype(auto) assoc(const T& m, const K& k, const V& v) {
-    typedef typename real_type<T>::type type;
+    typedef typename semantics::real_type<T>::type type;
     return nu<type>(*m, k, v);
   }
 

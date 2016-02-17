@@ -8,6 +8,7 @@
 
 #include "exceptions.hpp"
 #include "maybe.hpp"
+#include "semantics.hpp"
 #include "util.hpp"
 #include "value.hpp"
 
@@ -365,7 +366,9 @@ namespace imu {
     auto head = seq(x);
     auto out  = init;
 
-    while (auto step = first<arg_t>(head)) {
+    typedef typename semantics::real_type<decltype(head)>::type seq_t;
+
+    while (auto step = first<arg_t, typename seq_t::p>(head)) {
       out  = f(out, *step);
       head = rest(head);
     }

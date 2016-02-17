@@ -274,6 +274,23 @@ void test_reduce_2() {
   }
 }
 
+void test_reduce_3() {
+
+  std::cout << "TEST3" << std::endl;
+
+  auto lst = list(1, 2, 3, 4);
+  auto prt = partition(2, lst);
+
+  assert(imu::first(prt)  == list(1, 2));
+  assert(imu::second(prt) == list(3, 4));
+
+  int sum = reduce([](int s, const imu::ty::cons& x) {
+      return (s + *imu::first<int>(x) + *imu::second<int>(x));
+    }, 0, prt);
+
+  assert(sum == 10);
+}
+
 void test_map_0() {
 
   auto v = vector(1, 2, 3);
@@ -427,6 +444,7 @@ int main() {
   test_reduce_0();
   test_reduce_1();
   test_reduce_2();
+  test_reduce_3();
   test_map_0();
   test_filter_0();
   test_some_0();
