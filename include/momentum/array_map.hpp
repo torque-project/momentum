@@ -240,7 +240,7 @@ namespace imu {
   template<typename T>
   struct conjer {
     template<typename M>
-    static inline decltype(auto) conj(M& m, const T& x) {
+    static inline decltype(auto) conj(const M& m, const T& x) {
       return assoc(m, first(x), second(x));
     }
   };
