@@ -32,7 +32,7 @@ struct maybe {
   }
 
   inline const type* operator->() const {
-    return *ref;
+    return ref;
   }
 
   inline const type& get() const {
