@@ -31,7 +31,7 @@ struct maybe {
     return *ref;
   }
 
-  inline const type& operator->() const {
+  inline const type* operator->() const {
     return *ref;
   }
 
