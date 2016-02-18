@@ -366,11 +366,10 @@ namespace imu {
     auto head = seq(x);
     auto out  = init;
 
-    typedef typename semantics::real_type<decltype(head)>::type seq_t;
-
-    while (auto step = first<arg_t, typename seq_t::p>(head)) {
-      out  = f(out, *step);
-      head = rest(head);
+    while (!is_empty(head)) {
+      auto step = head->template first();
+      out       = f(out, value_cast<arg_t>(step));
+      head      = rest(head);
     }
 
     return out;

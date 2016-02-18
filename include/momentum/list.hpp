@@ -13,7 +13,8 @@ namespace imu {
     template<typename Value, typename mixin>
     struct basic_list : public mixin {
 
-      typedef typename mixin::template semantics<basic_list>::p p;
+      typedef typename mixin::template semantics<basic_list>::p  p;
+      typedef typename mixin::template semantics<basic_list>::cp cp;
 
       // the type store in this list. by default this is
       // a generic type that can store any value

@@ -23,7 +23,8 @@ namespace imu {
     template<typename T>
     struct semantics {
 
-      typedef std::shared_ptr<T> p;
+      typedef std::shared_ptr<T>       p;
+      typedef std::shared_ptr<const T> cp;
 
       template<typename... TS>
       static inline p allocate(TS... args) {

@@ -156,14 +156,22 @@ namespace imu {
     return v;
   }
 
-  template<typename T, typename X>
+  template<
+    typename T,
+    typename X,
+    typename = typename std::enable_if<
+      !std::is_pointer<T>::value
+      >::type>
   inline const T& value_cast(const X& x) {
     return static_cast<const T&>(x);
   }
 
   template<typename T, typename X>
-  inline T *const value_cast(X const* x) {
-    return static_cast<const T*>(x);
+  inline decltype(auto) value_cast(X* x) {
+    typedef typename std::decay<
+      typename std::remove_pointer<T>::type
+      >::type type;
+    return static_cast<type*>(x);
   }
 
   template<typename T, typename X>
