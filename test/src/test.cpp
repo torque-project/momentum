@@ -256,6 +256,18 @@ void test_iterated_0() {
   assert(first<int>(nthrest(2, s2)) == 3);
 }
 
+void test_for_each_0() {
+
+  auto lst = list(1, 2, 3);
+
+  int s = 0;
+  for_each([&](int x) {
+    s += x;
+  }, lst);
+
+  assert(s == 6);
+}
+
 void test_reduce_0() {
 
   auto lst = list(1, 2, 3);
@@ -474,6 +486,7 @@ int main() {
 
   std::cout << "All iterated seq tests passed" << std::endl;
 
+  test_for_each_0();
   test_reduce_0();
   test_reduce_1();
   test_reduce_2();

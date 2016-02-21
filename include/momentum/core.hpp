@@ -342,6 +342,26 @@ namespace imu {
     return m->get(k);
   }
 
+  /**
+   * @brief Iterate a sequence of values
+   * Calls a function on every value in seq
+   *
+   * @param f A function of one argument
+   * @param x Any value on which seq can be called.
+   * @return <b>void</b>
+   */
+  template<typename F, typename T>
+  inline void for_each(const F& f, const T& x) {
+
+    typedef type_traits::lambda_traits<F> signature_t;
+    typedef typename signature_t::template arg<0>::decayed arg_t;
+
+    auto head = seq(x);
+    while (!is_empty(head)) {
+      f(value_cast<arg_t>(head->first()));
+      head = rest(head);
+    }
+  }
 
   /**
    * @brief Reduces a sequence of values to a single value.
