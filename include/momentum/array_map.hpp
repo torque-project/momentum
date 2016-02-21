@@ -139,17 +139,19 @@ namespace imu {
         return -1;
       }
 
-      inline void assoc()
-      {}
+      inline int64_t assoc()
+      { return -1; }
 
       template<typename K0, typename V0>
-      inline void assoc(const K0& k, const V0& v) {
+      inline int64_t assoc(const K0& k, const V0& v) {
         int idx = find(k);
         if (idx != -1 ) {
           _values[idx] = value_type(key_type(k), val_type(v));
+          return idx;
         }
         else {
           _values.emplace(_values.end(), key_type(k), val_type(v));
+          return (_values.size()-1);
         }
       }
 
