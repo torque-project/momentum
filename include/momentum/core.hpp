@@ -342,6 +342,17 @@ namespace imu {
     return m->get(k);
   }
 
+  template<typename K, typename M, typename D>
+  inline auto get(const M& m, const K& k, const D& d)
+    -> decltype(m->get(k)) {
+    if (m) {
+      if (auto v = m->get(k)) {
+        return v;
+      }
+    }
+    return d;
+  }
+
   /**
    * @brief Iterate a sequence of values
    * Calls a function on every value in seq
