@@ -343,14 +343,13 @@ namespace imu {
   }
 
   template<typename K, typename M, typename D>
-  inline auto get(const M& m, const K& k, const D& d)
-    -> decltype(m->get(k)) {
+  inline typename M::value_type get(const M& m, const K& k, const D& d) {
     if (m) {
       if (auto v = m->get(k)) {
-        return v;
+        return *v;
       }
     }
-    return d;
+    return value_cast<typename M::value_type>(d);
   }
 
   /**
