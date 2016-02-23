@@ -56,8 +56,10 @@ namespace imu {
       }
     };
 
+    struct map_tag {};
+
     template<typename K = value, typename V = value, typename mixin = no_mixin>
-    struct basic_array_map : public mixin {
+    struct basic_array_map : public mixin, map_tag {
 
       typedef typename mixin::template semantics<basic_array_map>::p p;
 
@@ -256,7 +258,14 @@ namespace imu {
     }
   };
 
-  template<typename M, typename T>
+  template<
+    typename M, typename T,
+    typename = typename std::enable_if<
+      std::is_base_of<
+        ty::map_tag
+        , typename semantics::real_type<M>::type
+        >::value
+      >::type>
   inline decltype(auto) conj(const M& m, const T& x) {
     return conjer<T>::conj(m, x);
   }

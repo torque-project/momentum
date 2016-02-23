@@ -343,8 +343,9 @@ namespace imu {
   }
 
   template<typename K, typename M>
-  inline declytype(auto) get(
-    const M& m, const K& k, const typename M::value_type& d) {
+  inline decltype(auto) get(
+    const M& m, const K& k,
+    const typename semantics::real_type<M>::type::val_type& d) {
     if (m) {
       if (auto v = m->get(k)) {
         return *v;

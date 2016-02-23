@@ -10,8 +10,10 @@ namespace imu {
 
   namespace ty {
 
+    struct cons_tag {};
+
     template<typename Value, typename mixin>
-    struct basic_list : public mixin {
+    struct basic_list : public mixin, cons_tag {
 
       typedef typename mixin::template semantics<basic_list>::p  p;
       typedef typename mixin::template semantics<basic_list>::cp cp;
@@ -129,10 +131,17 @@ namespace imu {
   }
 
   // @cond HIDE
-  template<typename X, typename... T>
-  inline typename ty::basic_list<T...>::p
-  conj(const typename ty::basic_list<T...>::p& l, const X& v) {
-    return nu<ty::basic_list<T...>>(v, l);
+  template<typename S, typename T>
+  inline typename std::enable_if<
+    std::is_base_of<
+      ty::cons_tag
+      , typename semantics::real_type<S>::type
+      >::value,
+    typename semantics::real_type<S>::type::p
+    >::type
+  conj(const S& s, const T& x) {
+    typedef typename semantics::real_type<S>::type type;
+    return nu<type>(x, s);
   }
   // @endcond
 }
