@@ -418,8 +418,8 @@ namespace imu {
    * @param x Any value on which seq can be called.
    * @return Returns the result of the apply f to every value in the sequence.
    */
-  template<typename F, typename S>
-  inline ty::cons map(const F& f, const S& x) {
+  template<typename Cons = ty::cons, typename F, typename S>
+  inline Cons map(const F& f, const S& x) {
 
     typedef type_traits::lambda_traits<F> signature_t;
     typedef typename signature_t::template arg<0>::decayed arg_t;
@@ -427,7 +427,7 @@ namespace imu {
     return reduce([=](const ty::cons& s, const arg_t& x) {
         return conj(s, f(x));
       },
-      ty::cons(),
+      Cons(),
       seq(x));
   }
 
