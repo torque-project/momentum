@@ -163,6 +163,11 @@ namespace imu {
         assoc(kvs...);
       }
 
+      template<typename K0, typename V0>
+      static inline p assoc(const p& m, const K0& k, const V0& v) {
+        return imu::nu<basic_array_map>(*m, k, v);
+      }
+
       inline void dissoc(int64_t idx) {
         _values.erase(_values.begin() + idx);
       }
@@ -225,7 +230,7 @@ namespace imu {
   template<typename T, typename K, typename V>
   inline decltype(auto) assoc(const T& m, const K& k, const V& v) {
     typedef typename semantics::real_type<T>::type type;
-    return nu<type>(*m, k, v);
+    return type::assoc(m, k, v);
   }
 
   template<typename K, typename... TS>

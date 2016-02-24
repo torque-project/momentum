@@ -34,6 +34,10 @@ namespace imu {
         : _arr(32)
       {}
 
+      inline basic_node(const p& root)
+        : _arr(root->_arr)
+      {}
+
       inline basic_node(const base& root, const base& node)
         : basic_node()
       {
@@ -91,7 +95,8 @@ namespace imu {
     struct basic_leaf : public base_node<mixin> {
 
       typedef std::shared_ptr<basic_leaf> p;
-      typedef base_node<mixin> base;
+      typedef base_node<mixin>  base;
+      typedef basic_node<mixin> node;
 
       std::vector<Value> _arr;
 
@@ -107,6 +112,26 @@ namespace imu {
 
       inline const Value& operator[](uint64_t n) const {
         return _arr[n];
+      }
+
+      static inline typename base::p assoc(
+        const typename base::p& n, uint64_t level,
+        uint64_t k, const Value& v) {
+
+        uint64_t idx = (k >> level) & 0x01f;
+        if (level == 0) {
+          auto leaf = std::static_pointer_cast<basic_leaf>(n);
+          leaf->_arr[idx] = v;
+          return leaf;
+        }
+        else {
+          auto bn  = std::static_pointer_cast<node>(n);
+          auto ret = nu<node>(bn);
+
+          ret->_arr[idx] = assoc(bn->_arr[idx], level - 5, k, v);
+
+          return ret;
+        }
       }
     };
 
@@ -136,6 +161,13 @@ namespace imu {
         , _shift(5)
         , _root(nu<node>())
         , _tail(nu<leaf>())
+      {}
+
+      inline basic_vector(const p& v)
+        : _cnt(v->_cnt)
+        , _shift(v->_shift)
+        , _root(v->_root)
+        , _tail(nu<leaf>(v->_tail))
       {}
 
       inline basic_vector(const p& v, const Value& val)
@@ -216,7 +248,7 @@ namespace imu {
         throw out_of_bounds(n, _cnt);
       }
 
-      inline void extend_root(const basic_vector::p& v, const value_type& val) {
+      inline void extend_root(const p& v, const value_type& val) {
 
         auto new_leaf = nu<leaf>(v->_tail);
         _tail = nu<leaf>(val);
@@ -228,6 +260,25 @@ namespace imu {
         }
         else {
           _root = node::push_tail(v->_cnt, _shift, v->_root, new_leaf);
+        }
+      }
+
+      static inline p assoc(const p& v, uint64_t idx, const value_type& val) {
+        if (0 <= idx && idx < v->_cnt) {
+
+          auto ret = imu::nu<basic_vector>(v);
+
+          if (v->tail_off() <= idx) {
+            ret->_tail->_arr[(idx & 0x01)] = val;
+          }
+          else {
+            auto root = leaf::assoc(ret->_root, ret->_shift, idx, val);
+            ret->_root = std::static_pointer_cast<node>(root);
+          }
+          return ret;
+        }
+        else {
+          return nu<basic_vector>(v, val);
         }
       }
     };

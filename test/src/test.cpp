@@ -151,6 +151,14 @@ void test_vector_6() {
   }
 }
 
+void test_vector_7() {
+
+  auto v = vector(1, 2, 3);
+
+  v = assoc(v, 1, 5);
+  assert(nth<int>(v, 1) == 5);
+}
+
 void test_array_map_0() {
 
   std::string foo("foo");
@@ -470,6 +478,7 @@ int main() {
   test_vector_4();
   test_vector_5();
   test_vector_6();
+  test_vector_7();
 
   std::cout << "All vector tests passed" << std::endl;
 
