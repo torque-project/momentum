@@ -246,6 +246,19 @@ void test_array_map_5() {
   assert(second<int>(vs) == 2);
 }
 
+void test_array_map_6() {
+
+  std::string foo("foo");
+  std::string bar("bar");
+
+  auto m = update(array_map(foo, 1, bar, 2), bar, [](int x) {
+      return x + 6;
+    });
+
+  assert(get<int>(m, foo) == 1);
+  assert(get<int>(m, bar) == 8);
+}
+
 void test_iterated_0() {
 
   int foo[3] = {1, 2, 3};
@@ -488,6 +501,7 @@ int main() {
   test_array_map_3();
   test_array_map_4();
   test_array_map_5();
+  test_array_map_6();
 
   std::cout << "All array_map tests passed" << std::endl;
 

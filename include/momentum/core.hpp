@@ -354,6 +354,18 @@ namespace imu {
     return d;
   }
 
+  template<typename M, typename K, typename F, typename... TS>
+  inline decltype(auto) update(
+    const M& m, const K& k, const F& f,
+    const TS&... args) {
+
+    typedef type_traits::lambda_traits<F> signature_t;
+    typedef typename signature_t::template arg<0>::decayed arg_t;
+
+    auto x = get<arg_t>(m, k);
+    return assoc(m, k, f(x ? *x : arg_t(), args...));
+  }
+
   /**
    * @brief Iterate a sequence of values
    * Calls a function on every value in seq
