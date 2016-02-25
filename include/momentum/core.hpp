@@ -216,7 +216,7 @@ namespace imu {
    *
    */
   template<typename S>
-  inline std::shared_ptr<S> nthrest(uint64_t n, S& s) {
+  inline decltype(auto) nthrest(uint64_t n, S& s) {
 
     auto head = s;
     auto cnt  = n;
@@ -497,13 +497,13 @@ namespace imu {
    * @param x Any value on which seq can be called.
    * @return Returns the newly formed sequence.
    */
-  template<typename T>
-  inline ty::cons take(uint64_t n, const T& x) {
+  template<typename Cons = ty::cons, typename T>
+  inline Cons take(uint64_t n, const T& x) {
     auto s = seq(x);
     if (n > 0 && !is_empty(s)) {
-      return conj(take(n-1, rest(s)), *first(s));
+      return conj(take<Cons>(n-1, rest(s)), s->first());
     }
-    return ty::cons();
+    return Cons();
   }
 
   /**
@@ -671,7 +671,7 @@ namespace imu {
   inline Cons partition(uint64_t n, const T& x) {
     auto s = seq(x);
     if (!is_empty(s)) {
-      return conj(partition(n, nthrest(n, s)), take(n, s));
+      return conj(partition(n, nthrest(n, s)), take<Cons>(n, s));
     }
     return Cons();
   }
