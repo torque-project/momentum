@@ -64,7 +64,7 @@ namespace imu {
       }
 
       template<typename T>
-      inline const T& first() const {
+      inline decltype(auto) first() const {
         return value_cast<T>(_first);
       };
 
