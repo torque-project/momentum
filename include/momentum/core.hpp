@@ -516,18 +516,20 @@ namespace imu {
    * @param x    Any value on which seq can be called.
    * @return Returns the newly formed sequence.
    */
-  template<typename F, typename S>
-  inline ty::cons take_while(const F& pred, const S& s) {
+  template<typename Cons = ty::cons, typename F, typename S>
+  inline Cons take_while(const F& pred, const S& s) {
 
     typedef type_traits::lambda_traits<F> signature_t;
     typedef typename signature_t::template arg<0>::decayed arg_t;
 
-    auto f = first<arg_t>(s);
-    if (f && pred(f)) {
-      return conj(take_while(pred, rest(s), f));
+    if (!is_empty(s)) {
+      auto f = s->first();
+      if (pred(value_cast<arg_t>(f))) {
+        return conj(take_while<Cons>(pred, rest(s)), f);
+      }
     }
 
-    return ty::cons();
+    return Cons();
   }
 
   /**
@@ -665,13 +667,38 @@ namespace imu {
   }
   */
 
-  template<typename T>
-  inline ty::cons partition(uint64_t n, const T& x) {
+  template<typename Cons = ty::cons, typename T>
+  inline Cons partition(uint64_t n, const T& x) {
     auto s = seq(x);
     if (!is_empty(s)) {
       return conj(partition(n, nthrest(n, s)), take(n, s));
     }
-    return ty::cons();
+    return Cons();
+  }
+
+  template<typename Cons = ty::cons, typename F, typename T>
+  inline Cons partition_by(const F& f, const T& x) {
+
+    typedef type_traits::lambda_traits<F> signature_t;
+    typedef typename signature_t::template arg<0>::decayed arg_t;
+
+    auto s = seq(x);
+
+    if (!is_empty(s)) {
+      auto x    = s->first();
+      auto r    = f(value_cast<arg_t>(x));
+      auto part =
+        conj(
+          take_while<Cons>([&](const arg_t& a){
+              return f(a) == r;
+            },
+            rest(s)),
+          x);
+
+      return conj(partition_by(f, drop(count(part), s)), part);
+    }
+
+    return Cons();
   }
 
   template<typename M0, typename M1>

@@ -460,6 +460,21 @@ void test_partition_0() {
   assert(imu::first<int>(snd) == 3 && imu::second<int>(snd) == 4);
 }
 
+void test_partition_by_0() {
+
+  auto lst = imu::partition_by([](int x) {
+      return x < 3;
+    },
+    list(1, 2, 3, 4));
+
+  auto fst = imu::first<imu::ty::cons, imu::ty::cons>(lst);
+  auto snd = imu::second<imu::ty::cons, imu::ty::cons>(lst);
+
+  assert(fst && snd);
+  assert(imu::first<int>(fst) == 1 && imu::second<int>(fst) == 2);
+  assert(imu::first<int>(snd) == 3 && imu::second<int>(snd) == 4);
+}
+
 void test_merge_0() {
 
   auto m0 = array_map(1, 3, 2, 5);
@@ -523,6 +538,7 @@ int main() {
   test_into_3();
   test_take_0();
   test_partition_0();
+  test_partition_by_0();
   test_merge_0();
 
   std::cout << "All core tests passed" << std::endl;
