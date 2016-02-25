@@ -436,7 +436,7 @@ namespace imu {
     typedef type_traits::lambda_traits<F> signature_t;
     typedef typename signature_t::template arg<0>::decayed arg_t;
 
-    return reduce([=](const ty::cons& s, const arg_t& x) {
+    return reduce([=](const Cons& s, const arg_t& x) {
         return conj(s, f(x));
       },
       Cons(),
