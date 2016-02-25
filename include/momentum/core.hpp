@@ -671,7 +671,7 @@ namespace imu {
   inline Cons partition(uint64_t n, const T& x) {
     auto s = seq(x);
     if (!is_empty(s)) {
-      return conj(partition(n, nthrest(n, s)), take<Cons>(n, s));
+      return conj(partition<Cons>(n, nthrest(n, s)), take<Cons>(n, s));
     }
     return Cons();
   }
@@ -695,7 +695,7 @@ namespace imu {
             rest(s)),
           x);
 
-      return conj(partition_by(f, drop(count(part), s)), part);
+      return conj(partition_by<Cons>(f, drop(count(part), s)), part);
     }
 
     return Cons();
