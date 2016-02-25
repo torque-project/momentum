@@ -49,6 +49,21 @@ namespace imu {
       public lambda_traits<decltype(&T::operator())>
     {};
 
+    template <typename R, typename... Args>
+    struct lambda_traits<R(*)(Args...)> {
+
+      typedef R result_type;
+
+      template <size_t i>
+      struct arg {
+        typedef std::tuple<Args...> args;
+        typedef typename std::tuple_element<i,args>::type type;
+        typedef typename std::remove_reference<type>::type val;
+        typedef typename std::decay<type>::type decayed;
+        // typedef typename noref::element_type val;
+      };
+    };
+
     template <typename T, typename R, typename... Args>
     struct lambda_traits<R(T::*)(Args...) const> {
 

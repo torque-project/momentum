@@ -216,7 +216,7 @@ namespace imu {
    *
    */
   template<typename S>
-  inline std::shared_ptr<S> nthrest(uint64_t n, const std::shared_ptr<S>& s) {
+  inline std::shared_ptr<S> nthrest(uint64_t n, S& s) {
 
     auto head = s;
     auto cnt  = n;
