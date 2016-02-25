@@ -165,7 +165,10 @@ namespace imu {
 
       template<typename K0, typename V0>
       static inline p assoc(const p& m, const K0& k, const V0& v) {
-        return imu::nu<basic_array_map>(*m, k, v);
+        return m ?
+          imu::nu<basic_array_map>(*m : , k, v)
+          :
+          imu::nu<basic_array_map>(k, v);
       }
 
       inline void dissoc(int64_t idx) {
