@@ -135,13 +135,15 @@ namespace imu {
       }
     };
 
+    struct vector_tag {};
+
     template<
         typename Value = value
       , typename mixin = no_mixin
       , typename node  = basic_node<>
       , typename leaf  = basic_leaf<Value>
       >
-    struct basic_vector : public mixin {
+    struct basic_vector : public mixin, vector_tag {
 
       typedef typename mixin::template semantics<basic_vector>::p p;
 
@@ -398,11 +400,17 @@ namespace imu {
     return nu<S>(v, 0, 0);
   }
 
-  template<typename T, typename... TS>
-  inline ty::vector::p conj(
-    const typename ty::basic_vector<TS...>::p& v, const T& x) {
-
-    return nu<ty::vector>(v, x);
+  template<typename V, typename T>
+  inline typename std::enable_if<
+    std::is_base_of<
+      ty::vector_tag
+      , typename semantics::real_type<V>::type
+      >::value,
+    typename semantics::real_type<V>::type::p
+    >::type
+  conj(const V& v, const T& x) {
+    typedef typename semantics::real_type<V>::type type;
+    return nu<type>(v, x);
   }
   // @endcond
 }
