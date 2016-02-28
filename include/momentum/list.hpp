@@ -73,7 +73,7 @@ namespace imu {
       };
 
       inline p rest() const {
-        return _rest;
+        return _count == 1 ? p() : _rest;
       }
 
       template<typename S>

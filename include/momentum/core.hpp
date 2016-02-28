@@ -650,22 +650,27 @@ namespace imu {
    * @return The number of elements in the sequence
    *
    */
-  template<typename S>
-  inline auto count(const S& s)
-    -> decltype(s->count(), uint64_t()) {
+  namespace sfinae {
+    template<typename S>
+    inline auto count(const S& s, int)
+      -> decltype(s->count(), uint64_t()) {
 
-    return s ? s->count() : 0;
+      return s ? s->count() : 0;
+    }
+
+    template<typename S>
+    inline uint64_t count(const S& s, long) {
+      return reduce(
+        [](uint64_t s, const typename semantics::real_type<S>::type::value_type&) {
+          return s + 1;
+        }, 0, s);
+    }
   }
 
-  /*
   template<typename S>
   inline uint64_t count(const S& s) {
-    return reduce(
-      [](uint64_t s, const typename S::value_type&) {
-        return s + 1;
-      }, 0, s);
+    return sfinae::count(s, 0);
   }
-  */
 
   template<typename Cons = ty::cons, typename T>
   inline Cons partition(uint64_t n, const T& x) {
