@@ -48,7 +48,7 @@ namespace imu {
 
       template<typename T>
       static inline p from_std(const T& coll) {
-        auto out = nu<basic_list>();
+        auto out = p();
         for (auto i=coll.rbegin(); i!=coll.rend(); ++i) {
           out = nu<basic_list>(*i, out);
         }
