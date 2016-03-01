@@ -99,7 +99,7 @@ namespace imu {
   template<typename T, typename S>
   inline maybe<T> first(const S& s) {
     return !is_empty(s) ?
-      maybe<T>(s->template first<T>())
+      maybe<T>(seq(s)->template first<T>())
       :
       maybe<T>();
   }
@@ -115,9 +115,9 @@ namespace imu {
    */
   template<typename S>
   inline decltype(auto) first(const S& s) {
-    typedef decltype(s->first()) value_type;
+    typedef decltype(seq(s)->first()) value_type;
     return !is_empty(s) ?
-      maybe<value_type>(s->first())
+      maybe<value_type>(seq(s)->first())
       :
       maybe<value_type>();
   }
@@ -161,32 +161,6 @@ namespace imu {
     return first<S>(first<S>(s));
   }
 
-  // @cond HIDE
-  namespace sfinae {
-
-    template<typename S>
-    inline auto rest_impl_seq(const S& s)
-      -> decltype(s->rest()) {
-
-      return s ? s->rest() : S();
-    }
-
-    template<typename S>
-    inline auto rest_impl(const S& s, int)
-      -> decltype(rest_impl_seq(s)) {
-
-      return rest_impl_seq(s);
-    }
-
-    template<typename S>
-    inline auto rest_impl(const S& s, long)
-      -> decltype(rest_impl_seq(seq(s), 0)) {
-
-      return rest_impl_seq(seq(s));
-    }
-  }
-  // @endcond
-
   /**
    * Returns its input sequence without the first element. If the sequence
    * is empty, an empty sequence of the smae type as the input sequence
@@ -198,9 +172,10 @@ namespace imu {
    *
    */
   template<typename S>
-  inline auto rest(const S& s)
-    -> decltype(sfinae::rest_impl(s, 0)) {
-    return sfinae::rest_impl(s, 0);
+  inline decltype(auto) rest(const S& x) {
+    typedef decltype(seq(x)->rest()) R;
+    auto s = seq(x);
+    return s ? s->rest() : R();
   }
 
   /**
@@ -576,6 +551,24 @@ namespace imu {
     }
 
     return head;
+  }
+
+  /**
+   * @brief Takes every nth element from the beginning of a sequence
+   *
+   * @param n The number of elements to drop before taking a new one
+   * @param x Any value on which seq can be called.
+   * @return Returns the newly formed sequence.
+   */
+  template<typename Cons = ty::cons, typename S>
+  inline Cons take_nth(uint64_t n, const S& x) {
+
+    auto s = seq(x);
+
+    if (!is_empty(s)) {
+      return conj(take_nth<Cons>(n, drop(n, s)), s->first());
+    }
+    return Cons();
   }
 
   /**
