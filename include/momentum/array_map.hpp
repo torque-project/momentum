@@ -266,7 +266,8 @@ namespace imu {
   struct conjer<value> {
     template<typename M>
     static inline decltype(auto) conj(const M& m, const value& x) {
-      auto& p = x.get<typename ty::array_map::value_type>();
+      typedef typename semantics::real_type<M>::type type;
+      auto& p = x.get<typename type::value_type>();
       return assoc(m, first(p), second(p));
     }
   };
