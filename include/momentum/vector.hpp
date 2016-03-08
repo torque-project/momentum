@@ -188,12 +188,17 @@ namespace imu {
       }
 
       template<typename T>
-      static inline p from_std(const T& coll) {
+      static inline p from_std(const T& b, const T& e) {
         auto out = nu<basic_vector>();
-        for (auto& val : coll) {
-          out = nu<basic_vector>(out, val);
+        for (auto i=b; i!=e; ++i) {
+          out = nu<basic_vector>(out, *i);
         }
         return out;
+      }
+
+      template<typename T>
+      static inline p from_std(const T& coll) {
+        return from_std(std::begin(coll), std::end(coll));
       }
 
       inline bool is_empty() const {

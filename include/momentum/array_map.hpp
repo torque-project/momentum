@@ -93,15 +93,20 @@ namespace imu {
       }
 
       template<typename T>
-      static inline p from_std(const T& coll) {
+      static inline p from_std(const T& b, const T& e) {
         p out = nu<basic_array_map>();
-        auto i = coll.begin();
-        while (i != coll.end()) {
+        auto i = b;
+        while (i != e) {
           auto k = i++;
           auto v = i++;
           out->assoc(*k, *v);
         }
         return out;
+      }
+
+      template<typename T>
+      static inline p from_std(const T& coll) {
+        return from_std(std::begin(coll), std::end(coll));
       }
 
       inline bool is_empty() const {
