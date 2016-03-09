@@ -241,13 +241,12 @@ namespace imu {
     return type::assoc(m, k, v);
   }
 
-  template<typename K, typename... TS>
-  inline typename ty::basic_array_map<TS...>::p dissoc(
-    const typename ty::basic_array_map<TS...>::p& m, const K& k) {
-
+  template<typename T, typename K>
+  inline T dissoc(const T& m, const K& k) {
+    typedef typename semantics::real_type<T>::type type;
     auto idx = m->find(k);
     if(idx != -1) {
-      auto ret = nu<ty::basic_array_map<TS...>>(*m);
+      auto ret = nu<type>(*m);
       ret->dissoc(idx);
       return ret;
     }
