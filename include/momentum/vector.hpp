@@ -329,7 +329,7 @@ namespace imu {
       };
 
       inline p rest() const {
-        if (!is_empty()) {
+        if ((_off + 1) < _leaf->_arr.size()) {
           return nu<basic_chunked_seq>(_vec, _idx, _off + 1);
         }
         return p();
