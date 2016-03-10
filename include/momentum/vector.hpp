@@ -187,6 +187,25 @@ namespace imu {
         }
       }
 
+      static inline p factory() {
+        return nu<basic_vector>();
+      }
+
+      template<typename Arg>
+      static inline p factory(const p& v, const Arg& x) {
+        return conj(v, x);
+      }
+
+      template<typename Arg, typename... Args>
+      static inline p factory(const p& v, const Arg& x, Args... args) {
+        return factory(conj(v, x), args...);
+      }
+
+      template<typename Arg, typename... Args>
+      static inline p factory(const Arg& x, Args... args) {
+        return factory(factory(), x, args...);
+      }
+
       template<typename T>
       static inline p from_std(const T& b, const T& e) {
         auto out = nu<basic_vector>();
