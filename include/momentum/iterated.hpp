@@ -40,7 +40,7 @@ namespace imu {
       }
 
       inline p rest() const {
-        if (!is_empty()) {
+        if (_begin + 1 != _end) {
           return nu<basic_iterated_seq>(_begin + 1, _end);
         }
         return p();
