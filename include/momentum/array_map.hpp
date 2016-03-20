@@ -58,7 +58,11 @@ namespace imu {
 
     struct map_tag {};
 
-    template<typename K = value, typename V = value, typename mixin = no_mixin>
+    template<
+        typename K     = value
+      , typename V     = value
+      , typename EQ    = std::equal_to<K>
+      , typename mixin = no_mixin>
     struct basic_array_map : public mixin, map_tag {
 
       typedef typename mixin::template semantics<basic_array_map>::p p;
@@ -75,6 +79,7 @@ namespace imu {
       typedef typename table_type::iterator iterator;
       typedef typename table_type::const_iterator const_iterator;
 
+      EQ         _eq;
       table_type _values;
 
       inline basic_array_map(const basic_array_map& m)
@@ -139,7 +144,7 @@ namespace imu {
       inline int64_t find(const K0& k) const {
         int64_t ret = 0;
         for(auto i = _values.begin(); i!=_values.end(); ++i, ++ret) {
-          if (first(*i) == k) {
+          if (_eq(first(*i), k)) {
             return ret;
           }
         }
