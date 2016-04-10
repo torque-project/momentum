@@ -295,7 +295,7 @@ namespace imu {
           auto ret = imu::nu<basic_vector>(v);
 
           if (v->tail_off() <= idx) {
-            ret->_tail->_arr[(idx & 0x01)] = val;
+            ret->_tail->_arr[(idx & 0x01f)] = val;
           }
           else {
             auto root = leaf::assoc(ret->_root, ret->_shift, idx, val);
