@@ -175,11 +175,11 @@ namespace imu {
       inline basic_vector(const p& v, const Value& val)
         : _cnt(v->_cnt + 1)
         , _shift(v->_shift)
-        , _tail(v->_tail)
       {
         if ((v->_cnt - v->tail_off()) < 32) {
           _shift = v->_shift;
           _root  = v->_root;
+          _tail  = nu<leaf>(v->_tail);
           _tail->_arr.push_back(val);
         }
         else {
