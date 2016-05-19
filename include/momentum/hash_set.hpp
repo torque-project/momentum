@@ -13,14 +13,16 @@ namespace imu {
 
     struct set_tag {};
 
-    template<typename K = value, typename mixin = no_mixin>
+    template<typename K     = value,
+             typename EQ    = std::equal_to<K>,
+             typename mixin = no_mixin>
     struct basic_hash_set : public mixin, set_tag {
 
       typedef typename mixin::template semantics<basic_hash_set>::p p;
 
       typedef K value_type;
       typedef K val_type;
-      typedef basic_array_map<K, K> store_type;
+      typedef basic_array_map<K, K, EQ> store_type;
 
       typename store_type::p _store;
 
