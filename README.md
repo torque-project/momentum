@@ -33,8 +33,7 @@ output location for the build is the **target/** directory.
 The project is document via a set of tutorials in the project wiki as well as
 an API documentation.
 
-* [Momentum Wiki](https://github.com/jkrueger/momentum/wiki)
-* [API Docs](http://jkrueger.github.io/momentum)
+* [Momentum Wiki](https://github.com/torque-project/momentum/wiki)
 
 Otherwise the Clojure documentation is a good resource, since the API tries
 to be as close to Clojure as possible.
