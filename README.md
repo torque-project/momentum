@@ -28,6 +28,10 @@ This will fetch the project's build files in addition to the library headers.
 Simply running make in the project root will build all test binaries. The
 output location for the build is the **target/** directory.
 
+The make file in the repositories root directory sets the compiler tool chain
+that gets used during build. I develop on mac os, and build with clang. If you're
+on Linux you might want to set this to gcc.
+
 # Documentation
 
 The project is document via a set of tutorials in the project wiki as well as
