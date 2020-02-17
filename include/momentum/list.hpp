@@ -63,13 +63,13 @@ namespace imu {
         return _count;
       }
 
+      inline const value_type& first() const {
+        return _first;
+      };
+
       template<typename T>
       inline decltype(auto) first() const {
         return value_cast<T>(_first);
-      };
-
-      inline const value_type& first() const {
-        return _first;
       };
 
       inline p rest() const {

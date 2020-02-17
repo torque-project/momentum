@@ -386,8 +386,7 @@ namespace imu {
     auto out  = init;
 
     while (!is_empty(head)) {
-      auto step = head->template first();
-      out       = f(out, value_cast<arg_t>(step));
+      out       = f(out, head->template first<arg_t>());
       head      = rest(head);
     }
 
