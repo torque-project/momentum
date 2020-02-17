@@ -22,7 +22,7 @@ out this repository in your source tree, or download the project's tarball.
 If you would like to run the unit tests, make sure to check out this repository
 with
 
-    git checkout --recursive https://github.com/jkrueger/momentum
+    git checkout --recursive https://github.com/torque-project/momentum
 
 This will fetch the project's build files in addition to the library headers.
 Simply running make in the project root will build all test binaries. The
